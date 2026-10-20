@@ -228,6 +228,84 @@
   .tile.theater .act-full { display: none; }
   body.theater-open { overflow: hidden; }
   .tile.theater { position: fixed; top: 0; left: 0; z-index: 1000; border: none; border-radius: 0; aspect-ratio: auto; background: #000; }
+
+  /* ================= v10: topo, estados, notificações ================= */
+  #topbar .topActions { display: flex; align-items: center; gap: 8px; }
+  .top-btn { background: #2a2e37; color: #eaeaea; font-size: 13px; padding: 8px 12px; }
+  #netBadge { display: none; font-size: 12px; padding: 7px 10px; border-radius: 10px; background: #2a2e37; color: #9aa0a6; }
+  #netBadge.good { color: #5fd38d; }
+  #netBadge.warn { color: #f5b942; }
+  #netBadge.bad  { color: #ff6b6b; }
+  #notices { position: fixed; top: 64px; right: 14px; z-index: 1500; display: flex; flex-direction: column; gap: 6px; pointer-events: none; max-width: min(320px, 80vw); }
+  .notice { background: rgba(26,29,36,.96); border: 1px solid #2a2e37; border-radius: 10px; padding: 8px 12px; font-size: 13px; animation: noticeIn .18s ease-out; }
+  @keyframes noticeIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+
+  #micAlert { display: none; background: #241d12; border-bottom: 1px solid #f5b942; padding: 9px 20px; font-size: 13px; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  #micAlert.show { display: flex; }
+  #micAlert button { background: #f5b942; color: #1a1d24; padding: 6px 12px; font-size: 13px; }
+
+  .tile .state-badges { position: absolute; left: 10px; top: 36px; display: flex; flex-direction: column; gap: 4px; align-items: flex-start; }
+  .tile .sbadge { background: rgba(0,0,0,.62); border-radius: 8px; padding: 2px 7px; font-size: 11px; }
+  .tile .sbadge.muted { background: rgba(214,69,69,.85); }
+  .tile .sbadge.warn { background: rgba(245,185,66,.92); color: #1a1d24; }
+  .tile .sbadge.bad { background: rgba(214,69,69,.92); }
+  .tile.reconnecting video { opacity: .35; }
+  .tile.reconnecting .avatar { opacity: .5; }
+  .tile.pinned { border-color: #3d4a6b; }
+
+  /* ================= v10: layouts (grade / foco / lateral) ================= */
+  #grid.layout-focus { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; }
+  #grid.layout-focus .tile.focus { grid-column: 1 / -1; aspect-ratio: auto; height: calc(100dvh - 300px); min-height: 240px; }
+  #grid.layout-focus .tile:not(.focus) .vol-control { display: none; }
+  #grid.layout-focus .tile:not(.focus) .avatar { width: 40px; height: 40px; font-size: 16px; }
+  #grid.layout-side { grid-template-columns: minmax(0, 1fr) 190px; grid-auto-rows: min-content; gap: 8px; }
+  #grid.layout-side .tile.focus { grid-column: 1; grid-row: 1 / span 60; aspect-ratio: auto; height: calc(100dvh - 200px); min-height: 240px; }
+  #grid.layout-side .tile:not(.focus) { grid-column: 2; }
+  #grid.layout-side .tile:not(.focus) .vol-control { display: none; }
+  #grid.layout-side .tile:not(.focus) .avatar { width: 40px; height: 40px; font-size: 16px; }
+  @media (max-width: 700px) {
+    #grid.layout-side { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+    #grid.layout-side .tile.focus { grid-column: 1 / -1; grid-row: auto; height: calc(100dvh - 300px); }
+    #grid.layout-side .tile:not(.focus) { grid-column: auto; }
+  }
+
+  /* ================= v10: painel de configurações ================= */
+  #settingsOverlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 1800; }
+  #settingsPanel { position: fixed; top: 0; right: 0; bottom: 0; width: min(400px, 100vw); background: #14161c; border-left: 1px solid #2a2e37; z-index: 1900; transform: translateX(100%); transition: transform .18s ease; display: flex; flex-direction: column; visibility: hidden; }
+  body.settings-open #settingsOverlay { display: block; }
+  body.settings-open #settingsPanel { transform: none; visibility: visible; }
+  #settingsPanel header { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 1px solid #2a2e37; }
+  #settingsPanel header h2 { font-size: 16px; }
+  #settingsClose { background: #2a2e37; color: #eaeaea; padding: 6px 10px; font-size: 14px; }
+  #settingsBody { overflow-y: auto; padding: 4px 16px 24px; flex: 1; }
+  .sset { border-bottom: 1px solid #22252d; padding: 14px 0; }
+  .sset h3 { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: #9aa0a6; margin-bottom: 10px; }
+  .srow { display: flex; flex-direction: column; gap: 5px; margin-bottom: 11px; }
+  .srow > label, .srow .lbl { font-size: 13px; color: #c9ccd1; }
+  .srow .hint { font-size: 11px; color: #7b818a; line-height: 1.35; }
+  .srow select, .srow input[type="text"] { width: 100%; padding: 9px 10px; border-radius: 9px; border: 1px solid #2a2e37; background: #0f1115; color: #eaeaea; font-size: 14px; }
+  .srow input[type="range"] { width: 100%; accent-color: #5b8cff; }
+  .srow.inline { flex-direction: row; align-items: center; justify-content: space-between; gap: 10px; }
+  .srow.inline input[type="checkbox"] { width: 18px; height: 18px; accent-color: #5b8cff; }
+  .sbtn { background: #2a2e37; color: #eaeaea; font-size: 13px; padding: 8px 12px; }
+  .sbtn.on { background: #5b8cff; color: #fff; }
+  #micMeter { position: relative; height: 10px; background: #0f1115; border: 1px solid #2a2e37; border-radius: 6px; overflow: hidden; }
+  #micMeterFill { height: 100%; width: 0%; background: #5fd38d; transition: width .06s linear; }
+  #micMeterGate { position: absolute; top: 0; bottom: 0; width: 2px; background: #f5b942; display: none; }
+  #micInfo, #screenInfo { font-size: 11px; color: #7b818a; }
+
+  /* ================= v10: diagnóstico ================= */
+  #diagPanel { display: none; position: fixed; left: 12px; bottom: 96px; width: min(460px, calc(100vw - 24px)); max-height: 50vh; overflow-y: auto; background: rgba(20,22,28,.97); border: 1px solid #2a2e37; border-radius: 12px; z-index: 1700; font-size: 12px; }
+  #diagPanel.show { display: block; }
+  #diagPanel .dhead { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; border-bottom: 1px solid #2a2e37; color: #9aa0a6; position: sticky; top: 0; background: #14161c; }
+  #diagPanel .dhead button { background: none; color: #9aa0a6; padding: 2px 6px; font-size: 14px; }
+  #diagPanel table { width: 100%; border-collapse: collapse; }
+  #diagPanel td, #diagPanel th { padding: 5px 10px; text-align: left; font-weight: 400; }
+  #diagPanel th { color: #7b818a; width: 46%; }
+  #diagPanel .peerhead td { color: #eaeaea; font-weight: 600; padding-top: 10px; border-top: 1px solid #22252d; }
+  #diagPanel .ok { color: #5fd38d; } #diagPanel .wn { color: #f5b942; } #diagPanel .bd { color: #ff6b6b; }
+  #diagPanel .dfoot { padding: 6px 12px 10px; color: #7b818a; font-size: 11px; }
+  @media (max-width: 520px) { #controls { gap: 8px; padding: 12px 8px; } .ctrl-btn { width: 46px; height: 46px; } }
 </style>
 </head>
 <body>
@@ -251,35 +329,190 @@
 <div id="callScreen">
   <div id="topbar">
     <div class="roomInfo">Sala: <b id="roomLabel"></b> &nbsp;•&nbsp; <span id="peerCount">1</span> na chamada</div>
-    <button id="copyLinkBtn">🔗 Copiar link de convite</button>
+    <div class="topActions">
+      <button id="netBadge" title="Qualidade da conexão — clique para ver os detalhes"></button>
+      <button id="layoutBtn" class="top-btn" title="Alternar layout: grade / foco / lateral">▦ Grade</button>
+      <button id="copyLinkBtn">🔗 Copiar link de convite</button>
+    </div>
   </div>
+  <div id="micAlert"><span id="micAlertText"></span><button id="micAlertBtn"></button></div>
   <div id="grid"></div>
   <div id="controls">
     <button id="micBtn" class="ctrl-btn active" title="Mutar/desmutar (tecla M)">🎤</button>
     <button id="screenBtn" class="ctrl-btn" title="Compartilhar tela">🖥️</button>
+    <button id="settingsBtn" class="ctrl-btn" title="Configurações de áudio, tela e atalhos">⚙️</button>
     <button id="leaveBtn" class="ctrl-btn leave" title="Sair">📵</button>
   </div>
-  <div style="text-align:center;font-size:11px;color:#6b7280;padding-bottom:10px;background:#14161c;">Atalho: tecla <b>M</b> muta/desmuta</div>
+  <div id="shortcutHint" style="text-align:center;font-size:11px;color:#6b7280;padding-bottom:10px;background:#14161c;">Atalho: tecla <b>M</b> muta/desmuta</div>
 </div>
 
+<div id="notices"></div>
 <div id="toast"></div>
+
+<div id="diagPanel">
+  <div class="dhead"><span>📶 Diagnóstico da conexão (dados reais do WebRTC)</span><button id="diagClose" title="Fechar">✕</button></div>
+  <div id="diagBody"></div>
+  <div class="dfoot">Atualiza a cada 2 s. "—" = o navegador não informou esse dado.</div>
+</div>
+
+<div id="settingsOverlay"></div>
+<aside id="settingsPanel" aria-label="Configurações">
+  <header><h2>⚙️ Configurações</h2><button id="settingsClose" title="Fechar">✕</button></header>
+  <div id="settingsBody">
+
+    <section class="sset">
+      <h3>Perfil</h3>
+      <div class="srow">
+        <label for="setName">Nome exibido na sala</label>
+        <input type="text" id="setName" maxlength="20" placeholder="Seu nome">
+      </div>
+    </section>
+
+    <section class="sset">
+      <h3>Microfone</h3>
+      <div class="srow">
+        <label for="setMicDevice">Dispositivo de entrada</label>
+        <select id="setMicDevice"></select>
+      </div>
+      <div class="srow" id="outDeviceRow">
+        <label for="setOutDevice">Dispositivo de saída</label>
+        <select id="setOutDevice"></select>
+        <div class="hint">Só funciona em navegadores que permitem escolher a saída (Chrome/Edge).</div>
+      </div>
+      <div class="srow">
+        <span class="lbl">Nível do microfone (após os filtros)</span>
+        <div id="micMeter"><div id="micMeterFill"></div><div id="micMeterGate"></div></div>
+        <div id="micInfo"></div>
+      </div>
+      <div class="srow inline">
+        <span class="lbl">Ouvir meu microfone (use fones!)</span>
+        <button id="monitorBtn" class="sbtn">Testar</button>
+      </div>
+      <div class="srow" id="monitorSrcRow" style="display:none">
+        <label for="setMonitorSrc">Ouvir como</label>
+        <select id="setMonitorSrc">
+          <option value="processed">Processado (o que os outros ouvem)</option>
+          <option value="raw">Original (sem os meus filtros)</option>
+        </select>
+        <div class="hint">Compare os dois para ter certeza de que o filtro de ruído está funcionando.</div>
+      </div>
+      <div class="srow">
+        <label for="setGain">Ganho do microfone: <b id="setGainVal">100%</b></label>
+        <input type="range" id="setGain" min="0" max="200" value="100">
+      </div>
+    </section>
+
+    <section class="sset">
+      <h3>Qualidade do áudio</h3>
+      <div class="srow">
+        <label for="setNoise">Supressão de ruído</label>
+        <select id="setNoise">
+          <option value="ai">IA (RNNoise) — forte, para teclado e ventilador</option>
+          <option value="browser">Navegador — leve</option>
+          <option value="off">Desligada</option>
+        </select>
+        <div class="hint" id="noiseHint"></div>
+      </div>
+      <div class="srow inline"><label for="setEcho">Cancelamento de eco</label><input type="checkbox" id="setEcho"></div>
+      <div class="srow inline"><label for="setAgc">Ganho automático (AGC)</label><input type="checkbox" id="setAgc"></div>
+      <div class="srow inline"><label for="setGate">Portão de ruído (sensibilidade)</label><input type="checkbox" id="setGate"></div>
+      <div class="srow" id="gateRow" style="display:none">
+        <label for="setGateThr">Abrir acima de: <b id="setGateVal">-50 dB</b></label>
+        <input type="range" id="setGateThr" min="-70" max="-20" value="-50">
+        <div class="hint">A marca amarela no medidor mostra o limiar. Fale normalmente: a barra deve passar da marca; o ruído, não.</div>
+      </div>
+    </section>
+
+    <section class="sset">
+      <h3>Compartilhamento de tela</h3>
+      <div class="srow">
+        <label for="setRes">Resolução máxima</label>
+        <select id="setRes">
+          <option value="720">720p</option>
+          <option value="1080">1080p</option>
+          <option value="1440">1440p</option>
+          <option value="0">Original da tela</option>
+        </select>
+      </div>
+      <div class="srow">
+        <label for="setFps">Quadros por segundo</label>
+        <select id="setFps"><option value="15">15 fps</option><option value="30">30 fps</option><option value="60">60 fps</option></select>
+      </div>
+      <div class="srow">
+        <label for="setScreenMode">Prioridade</label>
+        <select id="setScreenMode">
+          <option value="detail">Nitidez (apresentações, texto)</option>
+          <option value="motion">Fluidez (jogos, vídeo)</option>
+        </select>
+      </div>
+      <div class="srow inline"><label for="setScreenAudio">Compartilhar áudio do sistema/aba</label><input type="checkbox" id="setScreenAudio"></div>
+      <div class="hint" style="margin:-4px 0 8px">Marque também "compartilhar áudio" na janela do navegador. Use fones: sem eles, quem está na chamada ouve o próprio eco.</div>
+      <div id="screenInfo">Esses valores são o máximo pedido. O que chega de verdade depende do navegador, do computador e da internet — veja em "Em uso" ao compartilhar e no diagnóstico.</div>
+    </section>
+
+    <section class="sset">
+      <h3>Interface e atalhos</h3>
+      <div class="srow inline">
+        <span class="lbl">Atalho para mutar/desmutar</span>
+        <button id="setShortcutBtn" class="sbtn">M</button>
+      </div>
+      <div class="srow inline">
+        <span class="lbl">Painel de diagnóstico</span>
+        <button id="openDiagBtn" class="sbtn">Abrir</button>
+      </div>
+      <div class="srow inline"><label for="setNotices">Avisos de entrada e saída</label><input type="checkbox" id="setNotices"></div>
+      <div class="hint">Dica: dê duplo clique em um participante para fixá-lo no modo foco.</div>
+    </section>
+  </div>
+</aside>
 
 <script>
 const $ = (id) => document.getElementById(id);
+
+// ================= v10: configuração e preferências =================
+// Servidor de sinalização próprio (opcional). Ex.: window.CALLZINHA_PEER_OPTIONS = { host:'meu-servidor.com', port:443, path:'/', secure:true }
+// Sem isso, usa o servidor gratuito do PeerJS (0.peerjs.com), que pode ficar instável em horários de pico.
+const PEER_OPTIONS = window.CALLZINHA_PEER_OPTIONS || {};
+const AUDIO_BITRATE = 64000;            // Opus mono ~64 kbps: voz limpa e estável (o padrão do navegador é ~32 kbps)
+const NS_VERSION = '0.4.1';             // @sapphi-red/web-noise-suppressor (RNNoise em WebAssembly, licença MIT)
+const NS_BASES = [
+  'https://cdn.jsdelivr.net/npm/@sapphi-red/web-noise-suppressor@' + NS_VERSION + '/dist/',
+  'https://unpkg.com/@sapphi-red/web-noise-suppressor@' + NS_VERSION + '/dist/'
+];
+const PREF_KEY = 'callzinha.prefs.v1';
+const DEFAULT_PREFS = {
+  name: '', micDevice: '', outDevice: '',
+  noise: 'ai',            // 'ai' (RNNoise) | 'browser' | 'off'
+  echo: true, agc: true, gain: 100, gateOn: false, gateThr: -50,
+  res: 1080, fps: 30, screenMode: 'detail', screenAudio: false,
+  shortcut: 'KeyM', layout: 'grid', notices: true
+};
+function loadPrefs() {
+  try { return Object.assign({}, DEFAULT_PREFS, JSON.parse(localStorage.getItem(PREF_KEY) || '{}')); }
+  catch (e) { return Object.assign({}, DEFAULT_PREFS); }
+}
+function savePrefs() { try { localStorage.setItem(PREF_KEY, JSON.stringify(prefs)); } catch (e) {} }
+let prefs = loadPrefs();
+
 let myName = "";
 let roomId = "";
 let peer = null;
 let isHost = false;
 let localStream = null;   // stream de ÁUDIO bruto do mic
-let micOutputStream = null; // stream já processado (com ganho aplicado) que vai pra chamada
+let micOutputStream = null; // stream já processado (com ganho aplicado) que vai pra chamada (faixa fixa: nunca precisa renegociar)
 let micGainNode = null;
-let micVolumePercent = 100; // 0-200%
+let micVolumePercent = Math.max(0, Math.min(200, Number(prefs.gain) || 100)); // 0-200%
 let screenStream = null;  // stream de vídeo (tela), só quando compartilhando
 let hasMic = false;
 const calls = {};       // peerId -> MediaConnection
 const conns = {};       // peerId -> DataConnection (nomes / lista de peers)
 const remoteNames = {}; // peerId -> name
 const hostConns = {};   // apenas o host usa: peerId -> DataConnection
+const peerStates = {};  // peerId -> { mic:boolean, screen:boolean } (estado informado pelo próprio participante)
+let knownPeers = new Set(); // convidado: quem está na sala segundo o anfitrião
+let rosterReady = false;    // evita avisos de "entrou" para quem já estava na sala quando eu cheguei
+const redialTimers = {};    // peerId -> timeout da religação
+const redialAttempts = {};  // peerId -> nº de tentativas seguidas
 
 function toast(msg) {
   const t = $('toast');
@@ -324,15 +557,23 @@ async function joinCall() {
   joining = true;
   $('joinBtn').disabled = true;
   resumeAudio(); // dentro do clique (iPhone exige)
-  myName = $('nameInput').value.trim() || "Anônimo";
+  const typedName = $('nameInput').value.trim();
+  myName = typedName || "Anônimo";
+  if (typedName) { prefs.name = typedName; savePrefs(); }
   roomId = $('roomInput').value.trim().toLowerCase().replace(/[^a-z0-9-]/g, '');
   if (!roomId) { setStatus("Digite ou gere um código de sala."); joining = false; $('joinBtn').disabled = false; return; }
 
+  ensureAudioGraph(); // faixa de áudio de saída fixa: o mic pode entrar/trocar depois sem derrubar as chamadas
+  if (prefs.noise === 'ai' && workletSupported()) {
+    setStatus("Preparando a supressão de ruído...");
+    await prepareNoise(6000);
+  }
+
   setStatus("Pedindo acesso ao microfone...");
   try {
-    localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    localStream = await acquireMicStream();
     hasMic = true;
-    setupMicGainChain(localStream);
+    await attachMicTrack(localStream.getAudioTracks()[0]);
   } catch (e) {
     // Não trava a entrada: entra mudo e permite ativar depois, de dentro da sala.
     localStream = new MediaStream();
@@ -354,7 +595,7 @@ function startPeer(attempt) {
   clearTimeout(retryTimer);
   killPeer();
   const hostId = "callzinha-" + roomId;
-  const p = new Peer(hostId, { debug: 0, config: RTC_CONFIG });
+  const p = new Peer(hostId, Object.assign({ debug: 0, config: RTC_CONFIG }, PEER_OPTIONS));
   peer = p;
   let done = false;
   const timer = setTimeout(() => again('servidor demorou'), 12000);
@@ -368,6 +609,7 @@ function startPeer(attempt) {
     if (done) return;
     done = true; clearTimeout(timer);
     isHost = true;
+    resetRoomState();
     enterCallUI(); addLocalTile(); listenForGuests(); keepAlive(p);
   });
   p.on('error', (err) => {
@@ -384,7 +626,7 @@ function startPeer(attempt) {
 // Se o "anfitrião" for fantasma (saiu/recarregou e o servidor ainda guarda o ID), tenta de novo sozinho.
 function joinAsGuest(attempt) {
   const hostId = "callzinha-" + roomId;
-  const p = new Peer(undefined, { debug: 0, config: RTC_CONFIG });
+  const p = new Peer(undefined, Object.assign({ debug: 0, config: RTC_CONFIG }, PEER_OPTIONS));
   peer = p;
   let ok = false, failed = false;
   const timer = setTimeout(() => fail('sala não respondeu'), 10000);
@@ -402,9 +644,11 @@ function joinAsGuest(attempt) {
       if (failed) return;
       ok = true; clearTimeout(timer);
       isHost = false;
+      resetRoomState();
       enterCallUI(); addLocalTile();
       p.on('call', (call) => acceptCall(call));
       conn.send({ type: 'hello', name: myName });
+      sendMyState();
       callPeer(hostId, remoteNames[hostId]);
       keepAlive(p);
     });
@@ -413,17 +657,42 @@ function joinAsGuest(attempt) {
   });
 }
 
-// Reconecta ao servidor de sinalização sem perder o ID
+// Reconecta ao servidor de sinalização sem perder o ID (insiste a cada 3 s enquanto estiver desconectado)
 function keepAlive(p) {
-  p.on('disconnected', () => { if (peer === p && !p.destroyed) { try { p.reconnect(); } catch (e) {} } });
+  let t = null;
+  const tick = () => {
+    clearTimeout(t);
+    if (peer !== p || p.destroyed) return;
+    if (p.disconnected) { try { p.reconnect(); } catch (e) {} t = setTimeout(tick, 3000); }
+  };
+  p.on('disconnected', () => { toast("Conexão com o servidor caiu, reconectando..."); tick(); });
+  p.on('open', () => { clearTimeout(t); });
+  p._czTick = tick;
+}
+window.addEventListener('online', () => {
+  if (peer && !peer.destroyed && peer._czTick) peer._czTick();
+  // a rede voltou: se alguma chamada ficou "pendurada", religa
+  Object.keys(calls).forEach((id) => {
+    const pc = calls[id] && calls[id].peerConnection;
+    if (pc && (pc.iceConnectionState === 'disconnected' || pc.iceConnectionState === 'failed')) { try { calls[id].close(); } catch (e) {} }
+  });
+});
+
+// Zera o que é "estado da sala" (ao entrar ou quando o anfitrião muda)
+function resetRoomState() {
+  knownPeers = new Set(); rosterReady = false;
+  for (const id of Object.keys(peerStates)) delete peerStates[id];
+  for (const id of Object.keys(redialTimers)) { clearTimeout(redialTimers[id]); delete redialTimers[id]; }
+  for (const id of Object.keys(redialAttempts)) delete redialAttempts[id];
 }
 
 // Anfitrião caiu: todo mundo refaz a entrada; o primeiro vira o novo anfitrião, os outros entram nele.
 function onHostLost() {
   toast("O anfitrião saiu, reconectando...");
-  for (const id of Object.keys(calls)) { try { calls[id].close(); } catch (e) {} delete calls[id]; removeRemoteTile(id); }
+  for (const id of Object.keys(calls)) { killCall(id); removeRemoteTile(id); }
   for (const id of Object.keys(conns)) delete conns[id];
   for (const id of Object.keys(hostConns)) delete hostConns[id];
+  resetRoomState();
   killPeer();
   setTimeout(() => startPeer(0), Math.random() * 1500);
 }
@@ -433,6 +702,8 @@ function enterCallUI() {
   $('callScreen').style.display = 'flex';
   $('roomLabel').textContent = roomId;
   if (!hasMic) showMediaBanner();
+  $('netBadge').style.display = 'none';
+  applyLayout(); refreshShortcutLabels(); startStatsLoop();
 }
 
 function showMediaBanner() {
@@ -450,15 +721,14 @@ async function enableMic() {
   const btn = document.getElementById('enableMediaBtn');
   if (btn) { btn.textContent = "Pedindo acesso..."; btn.disabled = true; }
   try {
-    localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    localStream = await acquireMicStream();
     hasMic = true; micOn = true;
-    setupMicGainChain(localStream);
+    await attachMicTrack(localStream.getAudioTracks()[0]);
     $('micBtn').textContent = '🎤';
     $('micBtn').classList.add('active'); $('micBtn').classList.remove('off');
-    attachVolumeMeter(localStream, 'tile-local');
-
-    // Reconecta as chamadas já existentes agora com áudio de verdade
-    rebuildAllCalls();
+    applyMicGain();
+    // Não precisa refazer as chamadas: a faixa de áudio enviada já existe desde a entrada e agora passa a ter o mic.
+    sendMyState();
 
     const banner = document.getElementById('mediaBanner');
     if (banner) banner.remove();
@@ -503,14 +773,15 @@ function addLocalTile() {
   myVolControl.className = 'vol-control';
   myVolControl.title = "Volume da sua própria voz enviada pra chamada";
   myVolControl.innerHTML = '<span>🎙️</span><input type="range" id="myMicVolSlider" min="0" max="200" value="' + micVolumePercent + '">';
-  myVolControl.querySelector('input').oninput = (e) => {
-    micVolumePercent = Number(e.target.value);
-    if (micGainNode && micOn) micGainNode.gain.value = micVolumePercent / 100;
-  };
+  myVolControl.querySelector('input').oninput = (e) => setMicVolume(Number(e.target.value), 'tile');
   tile.appendChild(video); tile.appendChild(avatar); tile.appendChild(tag); tile.appendChild(volbar); tile.appendChild(myVolControl);
+  const sb = document.createElement('div'); sb.className = 'state-badges'; tile.appendChild(sb);
+  tile.addEventListener('dblclick', (e) => { if (!e.target.closest('.vol-control, .tile-actions')) togglePin('tile-local'); });
   $('grid').appendChild(tile);
   updateCount();
-  if (hasMic) attachVolumeMeter(localStream, 'tile-local');
+  attachVolumeMeter(null, 'tile-local'); // o medidor local lê a cadeia de áudio (depois do ganho e do mudo)
+  renderBadges('local');
+  applyLayout();
 }
 
 function updateCount() { $('peerCount').textContent = $('grid').children.length; }
@@ -546,16 +817,24 @@ function addRemoteTile(peerId, name) {
   actions.querySelector('.act-rotate').onclick = rotateTheater;
   actions.querySelector('.act-exit').onclick = exitTheater;
   tile.appendChild(actions);
+  const sbadge = document.createElement('div'); sbadge.className = 'screen-badge'; sbadge.textContent = '🖥️ compartilhando tela'; tile.appendChild(sbadge);
+  const sb = document.createElement('div'); sb.className = 'state-badges'; tile.appendChild(sb);
+  tile.addEventListener('dblclick', (e) => { if (!e.target.closest('.vol-control, .tile-actions')) togglePin('tile-' + peerId); });
+  applySink(video);
   $('grid').appendChild(tile);
   updateCount();
+  applyPeerState(peerId);
   return video;
 }
 
 function removeRemoteTile(peerId) {
   const tile = document.getElementById('tile-' + peerId);
   if (theater && tile && theater.tile === tile) exitTheater();
+  if (pinnedId === 'tile-' + peerId) pinnedId = null;
+  stopMeter('tile-' + peerId);
   if (tile) tile.remove();
   updateCount();
+  applyLayout();
 }
 
 // ---- HOST: aceita conexões de dados dos convidados, mantém lista, distribui ----
@@ -563,44 +842,113 @@ function listenForGuests() {
   peer.on('connection', (conn) => {
     conn.on('open', () => {
       hostConns[conn.peer] = conn;
-      conn.send({ type: 'welcome', name: myName });
+      conn.send({ type: 'welcome', name: myName, state: myState() });
     });
     conn.on('data', (msg) => handleData(conn.peer, msg));
     conn.on('close', () => {
+      if (hostConns[conn.peer] !== conn) return;
       delete hostConns[conn.peer];
+      announcePresence(conn.peer, false);
       broadcastRoster();
-      removeRemoteTile(conn.peer);
-      if (calls[conn.peer]) { calls[conn.peer].close(); delete calls[conn.peer]; }
+      dropPeer(conn.peer);
     });
   });
   peer.on('call', (call) => acceptCall(call));
 }
 
+function safeSend(conn, msg) { try { if (conn && conn.open) conn.send(msg); } catch (e) {} }
+
 function broadcastRoster() {
   const roster = Object.keys(hostConns).concat([peer.id]);
   const names = Object.assign({ [peer.id]: myName }, remoteNames);
+  const states = Object.assign({}, peerStates, { [peer.id]: myState() });
   for (const id in hostConns) {
-    hostConns[id].send({ type: 'roster', peers: roster.filter(p => p !== id), names });
+    safeSend(hostConns[id], { type: 'roster', peers: roster.filter(p => p !== id), names, states });
   }
 }
 
+// O anfitrião repassa mensagens de um convidado para os outros (a topologia de dados é em estrela)
+function relay(exceptId, msg) {
+  for (const id in hostConns) if (id !== exceptId) safeSend(hostConns[id], Object.assign({}, msg, { from: exceptId }));
+}
 
+function hostId() { return 'callzinha-' + roomId; }
+function cleanName(n) { return String(n == null ? '' : n).replace(/[\u0000-\u001f]/g, '').trim().slice(0, 20); }
+function nameOf(pid) { return remoteNames[pid] || 'Participante'; }
+function isPeerPresent(pid) { return isHost ? !!hostConns[pid] : (knownPeers.has(pid) || pid === hostId()); }
+function myState() { return { mic: !!(hasMic && micOn), screen: !!sharingScreen }; }
+
+function sendMyState() {
+  if (!peer) return;
+  const msg = Object.assign({ type: 'state' }, myState());
+  if (isHost) { for (const id in hostConns) safeSend(hostConns[id], Object.assign({}, msg, { from: peer.id })); }
+  else safeSend(conns[hostId()], msg);
+  renderBadges('local');
+}
+function sendMyName() {
+  if (!peer) return;
+  const msg = { type: 'name', name: myName };
+  if (isHost) { for (const id in hostConns) safeSend(hostConns[id], Object.assign({}, msg, { from: peer.id })); }
+  else safeSend(conns[hostId()], msg);
+}
+
+function setPeerState(pid, st) {
+  const prev = peerStates[pid] || {};
+  peerStates[pid] = { mic: st.mic !== false, screen: !!st.screen };
+  if (peerStates[pid].screen && !prev.screen) notify('🖥️ ' + nameOf(pid) + ' está compartilhando a tela');
+  applyPeerState(pid);
+}
+
+function announcePresence(pid, joined) { notify((joined ? '➕ ' : '➖ ') + nameOf(pid) + (joined ? ' entrou' : ' saiu')); }
+
+// Remove tudo de um participante que saiu da sala
+function dropPeer(pid) {
+  clearTimeout(redialTimers[pid]); delete redialTimers[pid]; delete redialAttempts[pid];
+  killCall(pid);
+  removeRemoteTile(pid);
+  delete peerStates[pid]; delete remoteNames[pid]; delete statsPrev[pid]; delete peerHealth[pid];
+  updateNetBadge();
+}
 
 function handleData(fromId, msg) {
+  if (!msg || typeof msg !== 'object') return;
+  // Só o anfitrião pode dizer "esta mensagem é de outra pessoa" (campo from)
+  const viaHost = !isHost && fromId === hostId();
+  const from = (viaHost && typeof msg.from === 'string') ? msg.from : fromId;
   if (msg.type === 'hello') {
-    remoteNames[fromId] = msg.name;
-    updateTileName(fromId);
-    if (isHost) broadcastRoster();
+    const first = !(from in remoteNames);
+    remoteNames[from] = cleanName(msg.name) || 'Participante';
+    updateTileName(from);
+    if (isHost) { if (first) announcePresence(from, true); broadcastRoster(); }
   } else if (msg.type === 'welcome') {
-    remoteNames[fromId] = msg.name;
-    updateTileName(fromId);
+    remoteNames[from] = cleanName(msg.name) || 'Participante';
+    if (msg.state) setPeerState(from, msg.state);
+    updateTileName(from);
   } else if (msg.type === 'roster') {
-    Object.assign(remoteNames, msg.names);
-    updateTileName(fromId);
-    (msg.peers || []).forEach(pid => {
+    if (!viaHost) return;
+    const names = msg.names || {}, states = msg.states || {};
+    for (const k in names) if (k !== peer.id) remoteNames[k] = cleanName(names[k]) || 'Participante';
+    for (const k in states) if (k !== peer.id && states[k]) setPeerState(k, states[k]);
+    const list = (msg.peers || []).filter(pid => pid !== peer.id);
+    const before = knownPeers;
+    knownPeers = new Set(list);
+    if (rosterReady) {
+      list.forEach(pid => { if (!before.has(pid)) announcePresence(pid, true); });
+      before.forEach(pid => { if (!knownPeers.has(pid)) { announcePresence(pid, false); dropPeer(pid); } });
+    }
+    rosterReady = true;
+    Object.keys(remoteNames).forEach(updateTileName);
+    list.forEach(pid => {
       // Só o lado de ID "menor" liga, pra dois convidados não ligarem um pro outro ao mesmo tempo
-      if (pid !== peer.id && !calls[pid] && peer.id < pid) callPeer(pid, remoteNames[pid]);
+      if (!calls[pid] && !redialTimers[pid] && peer.id < pid) callPeer(pid, remoteNames[pid]);
     });
+  } else if (msg.type === 'state') {
+    setPeerState(from, msg);
+    if (isHost) relay(fromId, { type: 'state', mic: !!msg.mic, screen: !!msg.screen });
+  } else if (msg.type === 'name') {
+    remoteNames[from] = cleanName(msg.name) || 'Participante';
+    updateTileName(from);
+    if (isHost) relay(fromId, { type: 'name', name: remoteNames[from] });
   }
 }
 
@@ -614,171 +962,1111 @@ function updateTileName(peerId) {
 
 // ---- Medidor de volume ----
 let audioCtx = null;
-const volumeLoops = {};
 function getAudioCtx() {
-  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (!audioCtx) {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    // 48 kHz = taxa nativa do Opus e do filtro de ruído (RNNoise); latência "interactive" = menor atraso
+    try { audioCtx = new AC({ sampleRate: 48000, latencyHint: 'interactive' }); }
+    catch (e) { audioCtx = new AC(); }
+    audioCtx.onstatechange = () => { if (audioCtx.state === 'suspended' || audioCtx.state === 'interrupted') { try { audioCtx.resume(); } catch (e) {} } };
+  }
   return audioCtx;
 }
-let localMeterAnalyser = null;
+
+// Medidor + indicador "falando" (único indicador: a borda azul do tile). Usa RMS em dB com "hold",
+// então ruído baixo de fundo não acende a borda e a borda não pisca entre as sílabas.
+const meters = {}; // tileId -> { analyser, source, stream, isLocal, raf, until }
+const SPEAK_OPEN_DB = -46;
+function stopMeter(tileId) {
+  const m = meters[tileId];
+  if (!m) return;
+  cancelAnimationFrame(m.raf);
+  try { if (m.source) m.source.disconnect(); } catch (e) {}
+  try { if (m.isLocal && micGainNode) micGainNode.disconnect(m.analyser); } catch (e) {}
+  try { m.analyser.disconnect(); } catch (e) {}
+  delete meters[tileId];
+}
 function attachVolumeMeter(stream, tileId) {
   const isLocal = (tileId === 'tile-local');
-  if (!isLocal && !stream.getAudioTracks().length) return;
-  if (volumeLoops[tileId]) { cancelAnimationFrame(volumeLoops[tileId]); delete volumeLoops[tileId]; }
+  if (isLocal) { if (meters[tileId]) return; }
+  else {
+    if (!stream || !stream.getAudioTracks().length) return;
+    if (meters[tileId] && meters[tileId].stream === stream) return; // 'stream' pode disparar 2x (áudio e vídeo)
+  }
+  stopMeter(tileId);
+  ensureAudioGraph();
   const ctx = getAudioCtx();
   const analyser = ctx.createAnalyser();
-  analyser.fftSize = 512;
-  analyser.smoothingTimeConstant = 0.6;
-  if (isLocal && micGainNode) {
+  analyser.fftSize = 1024;
+  analyser.smoothingTimeConstant = 0;
+  let source = null;
+  if (isLocal) {
     // Mede o áudio DEPOIS do ganho: mutado (ganho 0) = silêncio = sem borda azul
-    if (localMeterAnalyser) { try { micGainNode.disconnect(localMeterAnalyser); } catch (e) {} }
     micGainNode.connect(analyser);
-    localMeterAnalyser = analyser;
   } else {
-    const source = ctx.createMediaStreamSource(stream);
+    source = ctx.createMediaStreamSource(stream);
     source.connect(analyser);
   }
-  const data = new Uint8Array(analyser.frequencyBinCount);
+  const m = { analyser, source, stream, isLocal, raf: 0, until: 0 };
+  meters[tileId] = m;
+  const buf = new Float32Array(analyser.fftSize);
 
   function loop() {
     const tile = document.getElementById(tileId);
-    if (!tile) { delete volumeLoops[tileId]; return; }
-    analyser.getByteFrequencyData(data);
-    let sum = 0;
-    for (let i = 0; i < data.length; i++) sum += data[i];
-    let level = Math.min(1, (sum / data.length) / 55);
-    if (isLocal && !micOn) level = 0; // mutado: nunca mostra como falando
+    if (!tile) { stopMeter(tileId); return; }
+    analyser.getFloatTimeDomainData(buf);
+    let s = 0;
+    for (let i = 0; i < buf.length; i++) s += buf[i] * buf[i];
+    const db = 10 * Math.log10(s / buf.length + 1e-12);
+    const muted = isLocal && !micOn; // mutado: nunca mostra como falando
+    const level = muted ? 0 : Math.max(0, Math.min(1, (db + 60) / 45));
+    const now = performance.now();
+    if (!muted && db > SPEAK_OPEN_DB) m.until = now + 250;
     const fill = tile.querySelector('.volfill');
     if (fill) fill.style.width = (level * 100) + '%';
-    tile.classList.toggle('speaking', level > 0.12);
-    volumeLoops[tileId] = requestAnimationFrame(loop);
+    tile.classList.toggle('speaking', !muted && now < m.until);
+    m.raf = requestAnimationFrame(loop);
   }
   loop();
 }
 
-function setupMicGainChain(rawStream) {
-  const ctx = getAudioCtx();
-  const source = ctx.createMediaStreamSource(rawStream);
-  micGainNode = ctx.createGain();
-  micGainNode.gain.value = micOn ? micVolumePercent / 100 : 0;
-  const dest = ctx.createMediaStreamDestination();
-  source.connect(micGainNode);
-  micGainNode.connect(dest);
-  micOutputStream = dest.stream;
+function stopAllMeters() { Object.keys(meters).forEach(stopMeter); }
+
+// A faixa de áudio que sai para a chamada é SEMPRE a mesma (MediaStreamDestination): trocar de microfone,
+// ligar o mic depois de entrar mudo, ou mutar não exige refazer nenhuma chamada.
+// O vídeo sai por um "slot" fixo: um quadro preto minúsculo enquanto não há tela; ao compartilhar usamos replaceTrack().
+let placeholderVideo = null;
+function getPlaceholderVideoTrack() {
+  if (!placeholderVideo) {
+    const c = document.createElement('canvas');
+    c.width = 16; c.height = 16;
+    const g = c.getContext('2d');
+    const paint = () => { g.fillStyle = '#000'; g.fillRect(0, 0, 16, 16); };
+    paint();
+    placeholderVideo = c.captureStream(1).getVideoTracks()[0];
+    placeholderVideo.contentHint = 'detail';
+    setInterval(paint, 1000);
+  }
+  return placeholderVideo;
 }
 
 function outgoingStream() {
-  // Junta áudio do mic (já com ganho aplicado, se houver) + vídeo da tela (se estiver compartilhando)
-  const tracks = [];
-  if (micOutputStream) tracks.push(...micOutputStream.getAudioTracks());
-  if (sharingScreen && screenStream) tracks.push(...screenStream.getVideoTracks());
+  ensureAudioGraph();
+  const tracks = [...micOutputStream.getAudioTracks()];
+  const screenTrack = (sharingScreen && screenStream) ? screenStream.getVideoTracks()[0] : null;
+  tracks.push(screenTrack || getPlaceholderVideoTrack());
   return new MediaStream(tracks);
+}
+
+// Opus otimizado para voz: mono, FEC (recupera pacotes perdidos), sem DTX (não corta início de frase) e ~64 kbps
+function tuneOpusSdp(sdp) {
+  try {
+    const m = /a=rtpmap:(\d+) opus\/48000\/2/i.exec(sdp);
+    if (!m) return sdp;
+    const pt = m[1];
+    const want = { minptime: '10', useinbandfec: '1', usedtx: '0', stereo: '0', 'sprop-stereo': '0', maxaveragebitrate: String(AUDIO_BITRATE) };
+    const fmtp = new RegExp('a=fmtp:' + pt + ' ([^\\r\\n]*)');
+    if (fmtp.test(sdp)) {
+      return sdp.replace(fmtp, (all, params) => {
+        const map = new Map();
+        params.split(';').forEach((kv) => { const i = kv.indexOf('='); const k = (i < 0 ? kv : kv.slice(0, i)).trim(); if (k) map.set(k, i < 0 ? null : kv.slice(i + 1).trim()); });
+        Object.keys(want).forEach((k) => map.set(k, want[k]));
+        return 'a=fmtp:' + pt + ' ' + [...map].map(([k, v]) => v === null ? k : k + '=' + v).join(';');
+      });
+    }
+    const line = 'a=fmtp:' + pt + ' ' + Object.keys(want).map((k) => k + '=' + want[k]).join(';');
+    return sdp.replace(new RegExp('(a=rtpmap:' + pt + ' opus/48000/2\\r?\\n)', 'i'), '$1' + line + '\r\n');
+  } catch (e) { return sdp; }
 }
 
 function callPeer(peerId, name) {
   if (calls[peerId] || peerId === peer.id) return;
-  const call = peer.call(peerId, outgoingStream(), { metadata: { name: myName, sharing: sharingScreen } });
+  const call = peer.call(peerId, outgoingStream(), { metadata: { name: myName, sharing: sharingScreen }, sdpTransform: tuneOpusSdp });
   calls[peerId] = call;
   wireCall(call, name);
 }
 
 function acceptCall(call) {
-  call.answer(outgoingStream());
+  const old = calls[call.peer];
+  if (old && old !== call) { old._replaced = true; clearTimeout(old._discTimer); clearTimeout(old._connectTimer); try { old.close(); } catch (e) {} }
+  call.answer(outgoingStream(), { sdpTransform: tuneOpusSdp });
   calls[call.peer] = call;
   const theirName = (call.metadata && call.metadata.name) || remoteNames[call.peer];
   wireCall(call, theirName);
 }
 
+// Fecha a chamada com um participante sem disparar religação (usado quando ele saiu de verdade)
+function killCall(pid) {
+  const c = calls[pid];
+  if (!c) return;
+  c._replaced = true;
+  clearTimeout(c._discTimer); clearTimeout(c._connectTimer);
+  delete calls[pid];
+  try { c.close(); } catch (e) {}
+}
+
+function iAmCaller(pid) {
+  if (isHost) return false;                 // o anfitrião normalmente só atende
+  if (pid === hostId()) return true;        // convidado sempre liga pro anfitrião
+  return peer.id < pid;                     // entre convidados, só o de ID menor liga
+}
+
+function setReconnecting(pid, on) {
+  const tile = document.getElementById('tile-' + pid);
+  if (tile) tile.classList.toggle('reconnecting', !!on);
+  renderBadges(pid);
+}
+
+// Ligação caiu: tenta religar SÓ esse participante (o resto da sala continua falando normalmente)
+function scheduleRedial(pid) {
+  if (redialTimers[pid]) return;
+  const n = (redialAttempts[pid] = (redialAttempts[pid] || 0) + 1);
+  if (n > 6) { setReconnecting(pid, true); notify('⚠️ Não consegui religar com ' + nameOf(pid)); return; }
+  // quem é o "chamador" religa logo; o outro lado espera e só tenta por conta própria se o chamador não aparecer
+  const delay = iAmCaller(pid) ? Math.min(1000 * n, 6000) + Math.random() * 600 : 9000 + Math.random() * 2000;
+  redialTimers[pid] = setTimeout(() => {
+    delete redialTimers[pid];
+    if (!peer || peer.destroyed || calls[pid] || !isPeerPresent(pid)) return;
+    callPeer(pid, remoteNames[pid]);
+  }, delay);
+}
+
+function onCallClosed(call) {
+  clearTimeout(call._discTimer); clearTimeout(call._connectTimer);
+  const pid = call.peer;
+  if (call._replaced || calls[pid] !== call) return; // já foi trocada por uma chamada nova (ou fechada de propósito)
+  delete calls[pid];
+  if (peer && !peer.destroyed && isPeerPresent(pid)) { setReconnecting(pid, true); scheduleRedial(pid); }
+  else removeRemoteTile(pid);
+}
+
+function onIceState(call, st) {
+  if (calls[call.peer] !== call) return;
+  const pid = call.peer;
+  if (st === 'connected' || st === 'completed') {
+    clearTimeout(call._discTimer); clearTimeout(call._connectTimer);
+    redialAttempts[pid] = 0;
+    setReconnecting(pid, false);
+    applySenderParams(call);
+  } else if (st === 'disconnected') {
+    setReconnecting(pid, true);
+    clearTimeout(call._discTimer);
+    // se não voltar sozinha em 8 s, refaz a ligação (o ICE do PeerJS não renegocia)
+    call._discTimer = setTimeout(() => {
+      const pc = call.peerConnection;
+      if (calls[pid] === call && pc && pc.iceConnectionState === 'disconnected') { try { call.close(); } catch (e) {} }
+    }, 8000);
+  }
+}
+
 function wireCall(call, name) {
+  // ligação que nunca chega a conectar (par sumiu): fecha para cair na rotina de religação
+  call._connectTimer = setTimeout(() => { if (calls[call.peer] === call && !call._gotStream) { try { call.close(); } catch (e) {} } }, 20000);
   call.on('stream', (remoteStream) => {
     if (calls[call.peer] !== call) return; // chamada antiga/duplicada
+    call._gotStream = true;
+    clearTimeout(call._connectTimer);
     const video = addRemoteTile(call.peer, name || remoteNames[call.peer]);
-    video.srcObject = remoteStream;
-    const hasVideo = remoteStream.getVideoTracks().length > 0;
-    video.classList.toggle('has-video', hasVideo);
-    const tile = document.getElementById('tile-' + call.peer);
-    if (tile) {
-      tile.classList.toggle('has-screen', hasVideo);
-      tile.querySelector('.screen-badge')?.remove();
-    }
-    if (hasVideo && tile) {
-      const badge = document.createElement('div');
-      badge.className = 'screen-badge';
-      badge.textContent = '🖥️ compartilhando tela';
-      badge.style.display = 'block';
-      tile.appendChild(badge);
-    }
+    if (video.srcObject !== remoteStream) video.srcObject = remoteStream;
+    applyPeerState(call.peer);
     tryPlay(video);
     attachVolumeMeter(remoteStream, 'tile-' + call.peer);
   });
-  call.on('close', () => {
-    if (calls[call.peer] !== call) return; // já foi trocada por uma chamada nova
-    removeRemoteTile(call.peer); delete calls[call.peer];
-  });
+  call.on('iceStateChanged', (st) => onIceState(call, st));
+  call.on('error', () => {});
+  call.on('close', () => onCallClosed(call));
 }
 
-function rebuildAllCalls() {
-  const ids = Object.keys(calls);
-  ids.forEach(id => { calls[id].close(); delete calls[id]; });
-  ids.forEach(id => callPeer(id, remoteNames[id]));
+// Mostra (ou esconde) a tela do participante conforme o estado que ELE informou; também atualiza os selos do tile
+function applyPeerState(pid) {
+  const tile = document.getElementById('tile-' + pid);
+  if (!tile) return;
+  const st = peerStates[pid] || {};
+  const video = tile.querySelector('video');
+  const src = video.srcObject;
+  const hasVideo = !!st.screen && !!(src && src.getVideoTracks().length);
+  video.classList.toggle('has-video', hasVideo);
+  tile.classList.toggle('has-screen', hasVideo);
+  const sb = tile.querySelector('.screen-badge');
+  if (sb) sb.style.display = hasVideo ? 'block' : 'none';
+  renderBadges(pid);
+  applyLayout();
+}
+
+// Selos de estado: microfone desligado, reconectando, conexão instável
+function renderBadges(pid) {
+  const tile = document.getElementById(pid === 'local' ? 'tile-local' : 'tile-' + pid);
+  if (!tile) return;
+  const box = tile.querySelector('.state-badges');
+  if (!box) return;
+  box.textContent = '';
+  const add = (cls, text) => { const d = document.createElement('div'); d.className = 'sbadge ' + cls; d.textContent = text; box.appendChild(d); };
+  const st = pid === 'local' ? myState() : (peerStates[pid] || { mic: true });
+  if (pid === 'local' && !hasMic) add('muted', '🎙️ sem microfone');
+  else if (!st.mic) add('muted', '🔇 mutado');
+  if (pid !== 'local') {
+    if (tile.classList.contains('reconnecting')) add('warn', '⟳ reconectando…');
+    else if (peerHealth[pid] && peerHealth[pid].level === 'bad') add('bad', '⚠ conexão ruim');
+    else if (peerHealth[pid] && peerHealth[pid].level === 'warn') add('warn', '⚠ instável');
+  }
 }
 
 // ---- Controles ----
 let micOn = true, sharingScreen = false;
 
-$('micBtn').onclick = () => {
+// Ganho do mic (0–200%) com rampa curtíssima: sem "estalo" ao mutar/desmutar
+function applyMicGain() {
+  if (!micGainNode) return;
+  const ctx = getAudioCtx();
+  const v = micOn ? micVolumePercent / 100 : 0;
+  try {
+    micGainNode.gain.cancelScheduledValues(ctx.currentTime);
+    micGainNode.gain.setTargetAtTime(v, ctx.currentTime, 0.01);
+  } catch (e) { micGainNode.gain.value = v; }
+}
+function setMicVolume(v, from) {
+  micVolumePercent = Math.max(0, Math.min(200, Math.round(v)));
+  prefs.gain = micVolumePercent; savePrefs();
+  applyMicGain();
+  const a = $('myMicVolSlider'); if (a && from !== 'tile') a.value = micVolumePercent;
+  const b = $('setGain'); if (b && from !== 'panel') b.value = micVolumePercent;
+  if ($('setGainVal')) $('setGainVal').textContent = micVolumePercent + '%';
+}
+
+function toggleMic() {
   if (!hasMic) { enableMic(); return; }
   micOn = !micOn;
-  if (micGainNode) micGainNode.gain.value = micOn ? micVolumePercent / 100 : 0;
+  applyMicGain();
   $('micBtn').classList.toggle('active', micOn);
   $('micBtn').classList.toggle('off', !micOn);
   $('micBtn').textContent = micOn ? '🎤' : '🔇';
-};
+  sendMyState();
+  updateMicAlert();
+}
+$('micBtn').onclick = toggleMic;
 
-$('screenBtn').onclick = async () => {
-  if (!sharingScreen) {
-    try {
-      screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
-    } catch (e) { return; }
-    sharingScreen = true;
-    const localVideo = document.querySelector('#tile-local video');
-    localVideo.srcObject = screenStream;
-    localVideo.classList.add('has-video');
-    $('screenBtn').classList.add('active');
-    rebuildAllCalls();
-    toast("Compartilhando sua tela");
-    screenStream.getVideoTracks()[0].onended = stopScreenShare;
-  } else {
-    stopScreenShare();
+// ---- Compartilhamento de tela ----
+function screenMaxBitrate() {
+  // Teto (não meta): o WebRTC ajusta sozinho conforme a banda disponível. ~0,08 bit/pixel/quadro, entre 1,2 e 12 Mbps.
+  const t = screenStream && screenStream.getVideoTracks()[0];
+  const s = (t && t.getSettings) ? t.getSettings() : {};
+  const res = Number(prefs.res), fps = Number(prefs.fps) || 30;
+  const w = s.width || (res ? Math.round(res * 16 / 9) : 1920), h = s.height || res || 1080;
+  return Math.round(Math.max(1.2e6, Math.min(12e6, w * h * fps * 0.08)));
+}
+
+function senderOf(call, kind) {
+  const pc = call && call.peerConnection;
+  if (!pc || !pc.getSenders) return null;
+  return pc.getSenders().find((s) => s.track && s.track.kind === kind) || null;
+}
+
+// Parâmetros de envio por chamada: áudio com prioridade alta; vídeo com teto de bitrate/FPS e preferência nitidez×fluidez
+async function applySenderParams(call) {
+  try {
+    const a = senderOf(call, 'audio');
+    if (a) {
+      const p = a.getParameters();
+      if (p.encodings && p.encodings.length) {
+        p.encodings[0].priority = 'high'; p.encodings[0].networkPriority = 'high';
+        await a.setParameters(p);
+      }
+    }
+  } catch (e) {}
+  try {
+    const v = senderOf(call, 'video');
+    if (v && sharingScreen) {
+      const p = v.getParameters();
+      if (p.encodings && p.encodings.length) {
+        p.encodings[0].maxBitrate = screenMaxBitrate();
+        p.encodings[0].maxFramerate = Number(prefs.fps) || 30;
+        p.encodings[0].priority = 'low'; p.encodings[0].networkPriority = 'low'; // se a rede apertar, o áudio vence a tela
+        try { p.degradationPreference = prefs.screenMode === 'motion' ? 'maintain-framerate' : 'maintain-resolution'; } catch (e) {}
+        await v.setParameters(p);
+      }
+    }
+  } catch (e) {}
+}
+function applySenderParamsAll() { Object.keys(calls).forEach((id) => applySenderParams(calls[id])); }
+
+async function setVideoOnCalls(track) {
+  const jobs = [];
+  for (const id of Object.keys(calls)) {
+    const pc = calls[id].peerConnection;
+    if (!pc) continue;
+    const sender = pc.getSenders().find((s) => (s.track && s.track.kind === 'video') || (pc.getTransceivers().some((t) => t.sender === s && t.receiver.track.kind === 'video')));
+    if (sender) jobs.push(sender.replaceTrack(track).catch(() => {}));
   }
-};
+  await Promise.all(jobs);
+}
 
-function stopScreenShare() {
-  if (screenStream) screenStream.getTracks().forEach(t => t.stop());
+// Sistema/aba → entra no MESMO destino de áudio do microfone (continua sendo uma única faixa de áudio)
+let screenAudioSrc = null, screenAudioGain = null;
+function connectScreenAudio(track) {
+  disconnectScreenAudio();
+  ensureAudioGraph();
+  const ctx = getAudioCtx();
+  screenAudioSrc = ctx.createMediaStreamSource(new MediaStream([track]));
+  screenAudioGain = ctx.createGain();
+  screenAudioGain.gain.value = 1;
+  screenAudioSrc.connect(screenAudioGain); screenAudioGain.connect(outDest);
+}
+function disconnectScreenAudio() {
+  try { if (screenAudioSrc) screenAudioSrc.disconnect(); } catch (e) {}
+  try { if (screenAudioGain) screenAudioGain.disconnect(); } catch (e) {}
+  screenAudioSrc = screenAudioGain = null;
+}
+
+function screenConstraints() {
+  const res = Number(prefs.res), fps = Number(prefs.fps) || 30;
+  const video = { frameRate: { ideal: fps, max: fps } };
+  if (res) { const w = Math.round(res * 16 / 9); video.width = { ideal: w, max: w }; video.height = { ideal: res, max: res }; }
+  const opts = { video, audio: false, surfaceSwitching: 'include', selfBrowserSurface: 'exclude' };
+  if (prefs.screenAudio) {
+    opts.audio = { echoCancellation: false, noiseSuppression: false, autoGainControl: false, restrictOwnAudio: true };
+    opts.systemAudio = 'include';
+  }
+  return opts;
+}
+
+function describeScreen() {
+  const t = screenStream && screenStream.getVideoTracks()[0];
+  if (!t || !t.getSettings) return '';
+  const s = t.getSettings();
+  let txt = (s.width && s.height) ? s.width + '×' + s.height : '';
+  if (s.frameRate) txt += ' a ' + Math.round(s.frameRate) + ' fps';
+  const au = screenStream.getAudioTracks().length ? ' · com áudio' : (prefs.screenAudio ? ' · sem áudio (o navegador não enviou)' : '');
+  return txt + au;
+}
+
+async function startScreenShare() {
+  try {
+    try { screenStream = await navigator.mediaDevices.getDisplayMedia(screenConstraints()); }
+    catch (e) {
+      if (e && (e.name === 'NotAllowedError' || e.name === 'AbortError')) return; // usuário cancelou
+      screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true });  // navegador não aceitou as opções: tenta o básico
+    }
+  } catch (e) { return; }
+  const vt = screenStream.getVideoTracks()[0];
+  try { vt.contentHint = prefs.screenMode === 'motion' ? 'motion' : 'detail'; } catch (e) {}
+  sharingScreen = true;
+  const localVideo = document.querySelector('#tile-local video');
+  localVideo.srcObject = new MediaStream([vt]);
+  localVideo.classList.add('has-video');
+  $('screenBtn').classList.add('active');
+  const at = screenStream.getAudioTracks()[0];
+  if (at) connectScreenAudio(at);
+  await setVideoOnCalls(vt);
+  applySenderParamsAll();
+  sendMyState();
+  updateScreenInfo();
+  applyLayout();
+  toast("Compartilhando sua tela " + describeScreen());
+  // O usuário pode parar pelo botão do próprio navegador ("Parar compartilhamento"): trata igual
+  vt.onended = () => { if (screenStream && screenStream.getVideoTracks()[0] === vt) stopScreenShare(); };
+}
+
+async function stopScreenShare() {
+  if (!sharingScreen && !screenStream) return;
+  const old = screenStream;
   sharingScreen = false;
+  screenStream = null;
+  if (old) old.getTracks().forEach(t => { t.onended = null; t.stop(); });
+  disconnectScreenAudio();
   const localVideo = document.querySelector('#tile-local video');
   localVideo.srcObject = null;
   localVideo.classList.remove('has-video');
   $('screenBtn').classList.remove('active');
-  rebuildAllCalls();
+  await setVideoOnCalls(getPlaceholderVideoTrack());
+  sendMyState();
+  updateScreenInfo();
+  applyLayout();
   toast("Parou de compartilhar a tela");
+}
+
+$('screenBtn').onclick = async () => {
+  if (!sharingScreen) await startScreenShare(); else await stopScreenShare();
+};
+
+// Mudou resolução/FPS/prioridade enquanto compartilha: aplica na hora
+async function applyScreenSettingsLive() {
+  if (!sharingScreen || !screenStream) return;
+  const vt = screenStream.getVideoTracks()[0];
+  if (!vt) return;
+  try { vt.contentHint = prefs.screenMode === 'motion' ? 'motion' : 'detail'; } catch (e) {}
+  const c = screenConstraints().video;
+  try { await vt.applyConstraints(c); } catch (e) { /* algumas fontes não aceitam mudar no meio: vale na próxima vez */ }
+  applySenderParamsAll();
+  updateScreenInfo();
+}
+function updateScreenInfo() {
+  const el = $('screenNow');
+  if (el) el.textContent = sharingScreen ? 'Em uso agora: ' + (describeScreen() || '—') : '';
 }
 
 $('leaveBtn').onclick = () => {
   if (confirm("Sair da chamada?")) location.reload();
 };
 
-// Atalho de teclado: M para mutar/desmutar (funciona enquanto a aba estiver em foco)
+// Atalho de teclado configurável (padrão: M) para mutar/desmutar — funciona enquanto a aba estiver em foco
+function parseShortcut(s) {
+  const parts = String(s || 'KeyM').split('+');
+  const code = parts.pop();
+  return { code, ctrl: parts.includes('ctrl'), alt: parts.includes('alt'), shift: parts.includes('shift'), meta: parts.includes('meta') };
+}
+function shortcutFromEvent(e) {
+  const mods = [];
+  if (e.ctrlKey) mods.push('ctrl'); if (e.altKey) mods.push('alt'); if (e.shiftKey) mods.push('shift'); if (e.metaKey) mods.push('meta');
+  return mods.concat([e.code]).join('+');
+}
+function shortcutLabel(s) {
+  const p = parseShortcut(s);
+  let k = p.code.replace(/^Key/, '').replace(/^Digit/, '').replace('Space', 'Espaço').replace('Backquote', '`');
+  const mods = [p.ctrl ? 'Ctrl' : '', p.alt ? 'Alt' : '', p.shift ? 'Shift' : '', p.meta ? 'Cmd' : ''].filter(Boolean);
+  return mods.concat([k]).join('+');
+}
+function refreshShortcutLabels() {
+  const lbl = shortcutLabel(prefs.shortcut);
+  $('micBtn').title = 'Mutar/desmutar (tecla ' + lbl + ')';
+  const h = $('shortcutHint'); if (h) { h.textContent = ''; h.append('Atalho: tecla '); const b = document.createElement('b'); b.textContent = lbl; h.append(b, ' muta/desmuta'); }
+  if ($('setShortcutBtn')) $('setShortcutBtn').textContent = lbl;
+}
+let capturingShortcut = false;
 document.addEventListener('keydown', (e) => {
+  if (capturingShortcut) return;
   const tag = (e.target.tagName || '').toLowerCase();
-  if (tag === 'input' || tag === 'textarea') return;
+  if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
   if (e.target.isContentEditable) return;
   const inCall = $('callScreen').offsetParent !== null; // true se estiver visível na tela
   if (!inCall) return;
-  if (e.key === 'm' || e.key === 'M' || e.code === 'KeyM') {
+  if (e.key === 'Escape' && document.body.classList.contains('settings-open')) { closeSettings(); return; }
+  const sc = parseShortcut(prefs.shortcut);
+  if (!e.repeat && e.code === sc.code && e.ctrlKey === sc.ctrl && e.altKey === sc.alt && e.shiftKey === sc.shift && e.metaKey === sc.meta) {
     e.preventDefault();
     $('micBtn').click();
   }
 });
+
+// ================= v10: motor de áudio do microfone =================
+// mic (getUserMedia) → [RNNoise IA] → [portão de ruído] → micTap → ganho/mudo → destino fixo (vai pras chamadas)
+let outDest = null, micTap = null, micTapAnalyser = null;
+let micTrack = null, micSourceNode = null, rawAnalyser = null, rnnoiseNode = null, gateNode = null;
+let rnnoiseAssets = null, rnnoisePromise = null, rnnoiseFailed = false;
+let rnnoiseModuleReady = null, gateModuleReady = null;
+let micState = 'ok';          // 'ok' | 'lost' | 'nosignal'
+let chainLock = Promise.resolve();
+let monitorOn = false, monitorSrc = 'processed', monitorDest = null, monitorGain = null, monitorAudio = null;
+
+function workletSupported() {
+  return !!(window.AudioWorkletNode && window.WebAssembly && (window.AudioContext || window.webkitAudioContext));
+}
+
+function ensureAudioGraph() {
+  if (outDest) return;
+  const ctx = getAudioCtx();
+  outDest = ctx.createMediaStreamDestination();
+  micGainNode = ctx.createGain();
+  micGainNode.gain.value = micOn ? micVolumePercent / 100 : 0;
+  micGainNode.connect(outDest);
+  micTap = ctx.createGain();                       // saída do processamento, ANTES do mudo: alimenta o medidor e o teste
+  micTap.connect(micGainNode);
+  micTapAnalyser = ctx.createAnalyser();
+  micTapAnalyser.fftSize = 1024; micTapAnalyser.smoothingTimeConstant = 0;
+  micTap.connect(micTapAnalyser);
+  micOutputStream = outDest.stream;
+}
+
+function simdSupported() {
+  try { return WebAssembly.validate(new Uint8Array([0,97,115,109,1,0,0,0,1,5,1,96,0,1,123,3,2,1,0,10,10,1,8,0,65,0,253,15,253,98,11])); }
+  catch (e) { return false; }
+}
+
+// Baixa (uma vez) o processador do RNNoise e o binário WebAssembly (~220 KB) de um CDN; se um falhar, tenta o outro
+function loadRnnoiseAssets() {
+  if (rnnoiseAssets) return Promise.resolve(rnnoiseAssets);
+  if (rnnoisePromise) return rnnoisePromise;
+  rnnoisePromise = (async () => {
+    let lastErr;
+    for (const base of NS_BASES) {
+      try {
+        const [jsRes, wasmRes] = await Promise.all([
+          fetch(base + 'rnnoise/workletProcessor.js'),
+          fetch(base + (simdSupported() ? 'rnnoise_simd.wasm' : 'rnnoise.wasm'))
+        ]);
+        if (!jsRes.ok || !wasmRes.ok) throw new Error('HTTP ' + jsRes.status + '/' + wasmRes.status);
+        const [js, wasm] = await Promise.all([jsRes.text(), wasmRes.arrayBuffer()]);
+        rnnoiseAssets = { js, wasm };
+        return rnnoiseAssets;
+      } catch (e) { lastErr = e; }
+    }
+    throw lastErr || new Error('indisponível');
+  })();
+  rnnoisePromise.catch(() => { rnnoisePromise = null; });
+  return rnnoisePromise;
+}
+
+async function prepareNoise(timeoutMs) {
+  try {
+    await Promise.race([loadRnnoiseAssets(), new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), timeoutMs))]);
+    rnnoiseFailed = false;
+  } catch (e) {
+    rnnoiseFailed = true;
+    // Se a internet só estava lenta, quando o filtro chegar ele entra sozinho
+    loadRnnoiseAssets().then(() => { rnnoiseFailed = false; if (hasMic && prefs.noise === 'ai') applyMicSettings(); }).catch(() => {});
+  }
+  refreshNoiseHint();
+}
+
+// Modo realmente em uso (pode diferir do escolhido se o navegador não suporta ou o filtro não carregou)
+function effectiveNoise() {
+  if (prefs.noise === 'ai') {
+    const rateOk = !audioCtx || audioCtx.sampleRate === 48000; // o RNNoise só funciona em 48 kHz
+    return (workletSupported() && rateOk && rnnoiseAssets && !rnnoiseFailed) ? 'ai' : 'browser';
+  }
+  return prefs.noise === 'off' ? 'off' : 'browser';
+}
+
+async function addWorkletSource(source) {
+  const url = URL.createObjectURL(new Blob([source], { type: 'application/javascript' }));
+  try { await getAudioCtx().audioWorklet.addModule(url); } finally { URL.revokeObjectURL(url); }
+}
+function ensureRnnoiseModule() {
+  if (!rnnoiseModuleReady) rnnoiseModuleReady = addWorkletSource(rnnoiseAssets.js).catch((e) => { rnnoiseModuleReady = null; throw e; });
+  return rnnoiseModuleReady;
+}
+// Portão de ruído próprio (pequeno): abre acima do limiar, segura 180 ms, fecha com rampa suave (sem estalo)
+const GATE_SRC = [
+  "class CzGate extends AudioWorkletProcessor {",
+  "  constructor() { super(); this.thr = -200; this.g = 1; this.hold = 0; this.port.onmessage = (e) => { if (e.data && typeof e.data.thr === 'number') this.thr = e.data.thr; }; }",
+  "  process(inputs, outputs) {",
+  "    const i = inputs[0], o = outputs[0];",
+  "    if (!i || !i.length || !i[0]) return true;",
+  "    const n = i[0].length; let s = 0;",
+  "    for (let k = 0; k < n; k++) { const v = i[0][k]; s += v * v; }",
+  "    const db = 10 * Math.log10(s / n + 1e-12);",
+  "    let target = 1;",
+  "    if (this.thr > -150) { if (db > this.thr) this.hold = Math.ceil(0.18 * sampleRate / n); else if (this.hold > 0) this.hold--; else target = 0; }",
+  "    const start = this.g, end = start + (target - start) * (target > start ? 0.35 : 0.04); this.g = end;",
+  "    for (let c = 0; c < o.length; c++) { const src = i[c] || i[0]; for (let k = 0; k < n; k++) o[c][k] = src[k] * (start + (end - start) * (k / n)); }",
+  "    return true;",
+  "  }",
+  "}",
+  "registerProcessor('cz-gate', CzGate);"
+].join('\n');
+function ensureGateModule() {
+  if (!gateModuleReady) gateModuleReady = addWorkletSource(GATE_SRC).catch((e) => { gateModuleReady = null; throw e; });
+  return gateModuleReady;
+}
+function sendGate() {
+  if (gateNode) { try { gateNode.port.postMessage({ thr: prefs.gateOn ? Number(prefs.gateThr) : -200 }); } catch (e) {} }
+}
+
+function micConstraints(useDevice) {
+  const a = {
+    channelCount: { ideal: 1 }, sampleRate: { ideal: 48000 },
+    echoCancellation: !!prefs.echo,
+    noiseSuppression: effectiveNoise() === 'browser',   // com RNNoise ligado, o filtro do navegador fica desligado (filtrar duas vezes deixa a voz metálica)
+    autoGainControl: !!prefs.agc
+  };
+  if (useDevice && prefs.micDevice) a.deviceId = { exact: prefs.micDevice };
+  return { audio: a };
+}
+async function acquireMicStream() {
+  try { return await navigator.mediaDevices.getUserMedia(micConstraints(true)); }
+  catch (e) {
+    if (prefs.micDevice && (e.name === 'OverconstrainedError' || e.name === 'NotFoundError')) {
+      toast('O microfone salvo não está conectado; usando o padrão do sistema.');
+      return await navigator.mediaDevices.getUserMedia(micConstraints(false));
+    }
+    throw e;
+  }
+}
+const MIC_ERRORS = {
+  NotAllowedError: "Permissão negada. Clique no cadeado 🔒 ao lado do endereço e permita o microfone.",
+  NotFoundError: "Nenhum microfone foi encontrado pelo navegador.",
+  NotReadableError: "Outro programa está usando o microfone agora."
+};
+function micErrorText(e) { return MIC_ERRORS[e && e.name] || "Não consegui ativar o microfone."; }
+
+function teardownChain() {
+  try { if (micTrack) { micTrack.onended = null; micTrack.onmute = null; micTrack.onunmute = null; } } catch (e) {}
+  disconnectMonitor();
+  [micSourceNode, rawAnalyser, rnnoiseNode, gateNode].forEach((n) => { try { if (n) n.disconnect(); } catch (e) {} });
+  try { if (rnnoiseNode) rnnoiseNode.port.postMessage('destroy'); } catch (e) {}
+  micSourceNode = rawAnalyser = rnnoiseNode = gateNode = null;
+}
+
+function attachMicTrack(track) {
+  chainLock = chainLock.then(() => doAttachMic(track)).catch((e) => { console.warn('mic chain', e); });
+  return chainLock;
+}
+async function doAttachMic(track) {
+  ensureAudioGraph();
+  const ctx = getAudioCtx();
+  teardownChain();
+  micTrack = track;
+  micSourceNode = ctx.createMediaStreamSource(new MediaStream([track]));
+  rawAnalyser = ctx.createAnalyser();
+  rawAnalyser.fftSize = 1024; rawAnalyser.smoothingTimeConstant = 0;
+  micSourceNode.connect(rawAnalyser);
+  let node = micSourceNode, reacquire = false;
+  if (workletSupported()) {
+    if (effectiveNoise() === 'ai') {
+      try {
+        await ensureRnnoiseModule();
+        rnnoiseNode = new AudioWorkletNode(ctx, '@sapphi-red/web-noise-suppressor/rnnoise', {
+          processorOptions: { maxChannels: 1, wasmBinary: rnnoiseAssets.wasm },
+          numberOfInputs: 1, numberOfOutputs: 1, outputChannelCount: [1], channelCount: 1, channelCountMode: 'explicit'
+        });
+        node.connect(rnnoiseNode); node = rnnoiseNode;
+      } catch (e) {
+        rnnoiseNode = null; rnnoiseFailed = true; reacquire = true;   // refaz a captura com o filtro do navegador ligado
+        toast('Filtro de ruído por IA indisponível; usando o do navegador.');
+      }
+    }
+    try {
+      await ensureGateModule();
+      gateNode = new AudioWorkletNode(ctx, 'cz-gate', { numberOfInputs: 1, numberOfOutputs: 1, outputChannelCount: [1], channelCount: 1, channelCountMode: 'explicit' });
+      node.connect(gateNode); node = gateNode; sendGate();
+    } catch (e) { gateNode = null; }
+  }
+  node.connect(micTap);
+  if (monitorOn) connectMonitor();
+  track.onended = () => onMicEnded(track);
+  track.onmute = () => updateMicAlert();
+  track.onunmute = () => updateMicAlert();
+  micState = 'ok'; noSignalCount = 0;
+  updateMicAlert(); refreshMicInfo(); refreshNoiseHint(); renderBadges('local');
+  if (reacquire) setTimeout(applyMicSettings, 0);
+}
+
+// Reaplica as configurações de captura (dispositivo, eco, AGC, modo de ruído): refaz só o microfone, nunca as chamadas
+async function applyMicSettings() {
+  if (!hasMic) { refreshMicInfo(); return; }
+  const old = localStream;
+  if (old) old.getTracks().forEach((t) => { try { t.stop(); } catch (e) {} });
+  try {
+    const stream = await acquireMicStream();
+    localStream = stream;
+    await attachMicTrack(stream.getAudioTracks()[0]);
+    refreshDevices();
+  } catch (e) {
+    micState = 'lost'; updateMicAlert();
+    toast(micErrorText(e));
+  }
+}
+
+function onMicEnded(track) {
+  if (track !== micTrack) return;
+  micState = 'lost';
+  updateMicAlert();
+  notify('🎙️ Microfone desconectado', true);
+}
+
+// Sem sinal: faixa "ao vivo" entregando silêncio digital absoluto por 5 s (mudo no aparelho/sistema, dispositivo travado)
+let noSignalCount = 0;
+function checkNoSignal() {
+  if (!hasMic || !micTrack || micTrack.readyState !== 'live' || !rawAnalyser || !audioCtx || audioCtx.state !== 'running') { noSignalCount = 0; return; }
+  const buf = new Float32Array(rawAnalyser.fftSize);
+  rawAnalyser.getFloatTimeDomainData(buf);
+  let peak = 0;
+  for (let i = 0; i < buf.length; i++) { const a = Math.abs(buf[i]); if (a > peak) peak = a; }
+  noSignalCount = peak === 0 ? noSignalCount + 1 : 0;
+  const next = noSignalCount >= 5 ? 'nosignal' : (micState === 'nosignal' ? 'ok' : micState);
+  if (next !== micState) { micState = next; updateMicAlert(); }
+}
+setInterval(checkNoSignal, 1000);
+
+function updateMicAlert() {
+  const box = $('micAlert');
+  if (!box) return;
+  let msg = '', label = '', fn = null;
+  if (hasMic) {
+    if (micState === 'lost') { msg = '🎙️ O microfone foi desconectado ou parou de responder.'; label = 'Tentar de novo'; fn = () => applyMicSettings(); }
+    else if (micTrack && micTrack.muted) { msg = '🎙️ O sistema/aparelho está com o microfone mudo ou bloqueado.'; }
+    else if (micState === 'nosignal' && micOn) { msg = '🎙️ Sem sinal do microfone: nenhum som está chegando. Confira o mudo do aparelho ou troque o dispositivo.'; label = 'Configurações'; fn = openSettings; }
+  }
+  box.classList.toggle('show', !!msg);
+  $('micAlertText').textContent = msg;
+  const b = $('micAlertBtn');
+  b.style.display = label ? '' : 'none';
+  b.textContent = label;
+  b.onclick = fn;
+}
+
+// ---- Dispositivos de áudio ----
+async function refreshDevices() {
+  if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) return;
+  let list = [];
+  try { list = await navigator.mediaDevices.enumerateDevices(); } catch (e) { return; }
+  const ins = list.filter((d) => d.kind === 'audioinput'), outs = list.filter((d) => d.kind === 'audiooutput');
+  const cur = (micTrack && micTrack.getSettings && micTrack.getSettings().deviceId) || prefs.micDevice || 'default';
+  const fill = (sel, devs, val, what) => {
+    sel.textContent = '';
+    devs.forEach((d, i) => { const o = document.createElement('option'); o.value = d.deviceId; o.textContent = d.label || (what + ' ' + (i + 1)); sel.appendChild(o); });
+    if ([...sel.options].some((o) => o.value === val)) sel.value = val;
+  };
+  fill($('setMicDevice'), ins, cur, 'Microfone');
+  fill($('setOutDevice'), outs, prefs.outDevice || 'default', 'Saída');
+  $('outDeviceRow').style.display = (HTMLMediaElement.prototype.setSinkId && outs.length) ? '' : 'none';
+}
+if (navigator.mediaDevices && navigator.mediaDevices.addEventListener) {
+  navigator.mediaDevices.addEventListener('devicechange', () => {
+    refreshDevices();
+    if (hasMic && (micState === 'lost' || (micTrack && micTrack.readyState === 'ended'))) applyMicSettings(); // plugou de volta: recupera sozinho
+  });
+}
+function applySink(media) {
+  if (prefs.outDevice && media && media.setSinkId) media.setSinkId(prefs.outDevice).catch(() => {});
+}
+function applySinkAll() {
+  document.querySelectorAll('.tile video').forEach(applySink);
+  if (monitorAudio) applySink(monitorAudio);
+}
+
+// ---- Teste do microfone: ouvir a si mesmo (processado ou original) ----
+function disconnectMonitor() {
+  try { if (micTap && monitorGain) micTap.disconnect(monitorGain); } catch (e) {}
+  try { if (micSourceNode && monitorGain) micSourceNode.disconnect(monitorGain); } catch (e) {}
+  try { if (monitorGain) monitorGain.disconnect(); } catch (e) {}
+  if (monitorAudio) { try { monitorAudio.pause(); } catch (e) {} monitorAudio.srcObject = null; }
+  monitorGain = monitorDest = null;
+}
+function connectMonitor() {
+  disconnectMonitor();
+  const src = monitorSrc === 'raw' ? micSourceNode : micTap;
+  if (!src) return;
+  const ctx = getAudioCtx();
+  monitorDest = ctx.createMediaStreamDestination();
+  monitorGain = ctx.createGain();
+  src.connect(monitorGain); monitorGain.connect(monitorDest);
+  if (!monitorAudio) { monitorAudio = new Audio(); monitorAudio.autoplay = true; }
+  monitorAudio.srcObject = monitorDest.stream;
+  applySink(monitorAudio);
+  monitorAudio.play().catch(() => {});
+}
+function toggleMonitor(force) {
+  monitorOn = typeof force === 'boolean' ? force : !monitorOn;
+  if (monitorOn && !hasMic) { monitorOn = false; toast('Ative o microfone primeiro.'); }
+  if (monitorOn) connectMonitor(); else disconnectMonitor();
+  $('monitorBtn').textContent = monitorOn ? 'Parar' : 'Testar';
+  $('monitorBtn').classList.toggle('on', monitorOn);
+  $('monitorSrcRow').style.display = monitorOn ? '' : 'none';
+}
+
+// ---- Avisos discretos (entrada/saída etc.) ----
+function notify(msg, important) {
+  if (!prefs.notices && !important) return;
+  const box = $('notices');
+  const d = document.createElement('div');
+  d.className = 'notice';
+  d.textContent = msg;
+  box.appendChild(d);
+  while (box.children.length > 4) box.firstChild.remove();
+  setTimeout(() => d.remove(), 3500);
+}
+
+// ================= v10: layouts (grade / foco / lateral) =================
+let pinnedId = null;
+const LAYOUTS = ['grid', 'focus', 'side'];
+const LAYOUT_LABEL = { grid: '▦ Grade', focus: '◧ Foco', side: '◫ Lateral' };
+function focusTileId() {
+  if (pinnedId && document.getElementById(pinnedId)) return pinnedId;
+  const sharer = Object.keys(peerStates).find((pid) => peerStates[pid].screen && document.getElementById('tile-' + pid));
+  if (sharer) return 'tile-' + sharer;
+  if (sharingScreen) return 'tile-local';
+  return null;
+}
+function applyLayout() {
+  const grid = $('grid');
+  if (!grid) return;
+  const mode = LAYOUTS.includes(prefs.layout) ? prefs.layout : 'grid';
+  const fid = mode === 'grid' ? null : focusTileId();   // sem nada para focar, volta a ser grade
+  grid.classList.toggle('layout-focus', mode === 'focus' && !!fid);
+  grid.classList.toggle('layout-side', mode === 'side' && !!fid);
+  grid.querySelectorAll('.tile').forEach((t) => { t.classList.toggle('focus', !!fid && t.id === fid); t.classList.toggle('pinned', t.id === pinnedId); });
+  $('layoutBtn').textContent = LAYOUT_LABEL[mode];
+}
+function cycleLayout() {
+  prefs.layout = LAYOUTS[(LAYOUTS.indexOf(prefs.layout) + 1) % LAYOUTS.length];
+  savePrefs(); applyLayout();
+  if (prefs.layout !== 'grid' && !focusTileId()) toast('Dê duplo clique em um participante para fixá-lo em destaque (ou aguarde alguém compartilhar a tela).');
+}
+function togglePin(tid) { pinnedId = (pinnedId === tid) ? null : tid; applyLayout(); }
+$('layoutBtn').onclick = cycleLayout;
+
+// ================= v10: diagnóstico (getStats real) =================
+const statsPrev = {};   // peerId -> última amostra (para calcular taxas)
+const peerHealth = {};  // peerId -> { level, m }
+let statsTimer = null, statsTick = 0, statsBusy = false, diagOpen = false;
+const lastWarn = {};
+
+function startStatsLoop() { if (!statsTimer) statsTimer = setInterval(statsStep, 2000); }
+
+async function collectStats(pid) {
+  const call = calls[pid], pc = call && call.peerConnection;
+  if (!pc || !pc.getStats) return null;
+  let rep;
+  try { rep = await pc.getStats(); } catch (e) { return null; }
+  const now = performance.now();
+  const prev = statsPrev[pid] || {};
+  const cur = { t: now };
+  const m = { state: pc.iceConnectionState, rtt: null, jitter: null, loss: null, aIn: null, vIn: null, w: null, h: null, fps: null, aOut: null, vOut: null, limit: null, route: null };
+  let selected = null, rttRemote = null;
+  const pairs = [];
+  rep.forEach((r) => {
+    if (r.type === 'transport' && r.selectedCandidatePairId) selected = r.selectedCandidatePairId;
+    else if (r.type === 'candidate-pair') pairs.push(r);
+    else if (r.type === 'remote-inbound-rtp' && typeof r.roundTripTime === 'number') rttRemote = r.roundTripTime * 1000;
+    else if (r.type === 'inbound-rtp' && !r.isRemote) {
+      const kind = r.kind || r.mediaType;
+      if (kind === 'audio') {
+        cur.aIn = r.bytesReceived; cur.aLost = r.packetsLost; cur.aRecv = r.packetsReceived;
+        if (typeof r.jitter === 'number') m.jitter = r.jitter * 1000;
+      } else if (kind === 'video') {
+        cur.vIn = r.bytesReceived; m.w = r.frameWidth; m.h = r.frameHeight; m.fps = r.framesPerSecond;
+      }
+    } else if (r.type === 'outbound-rtp' && !r.isRemote) {
+      const kind = r.kind || r.mediaType;
+      if (kind === 'audio') cur.aOut = r.bytesSent;
+      else if (kind === 'video') { cur.vOut = r.bytesSent; m.limit = r.qualityLimitationReason || null; }
+    }
+  });
+  const pair = pairs.find((p) => p.id === selected) || pairs.find((p) => (p.nominated || p.selected) && p.state === 'succeeded');
+  if (pair && typeof pair.currentRoundTripTime === 'number') m.rtt = pair.currentRoundTripTime * 1000;
+  else if (rttRemote !== null) m.rtt = rttRemote;
+  if (pair && pair.localCandidateId) {
+    const lc = rep.get ? rep.get(pair.localCandidateId) : null;
+    const rc = rep.get ? rep.get(pair.remoteCandidateId) : null;
+    const types = [lc && lc.candidateType, rc && rc.candidateType];
+    m.route = types.includes('relay') ? 'via servidor TURN' : (types.includes('srflx') || types.includes('prflx')) ? 'direta (via STUN)' : types.some(Boolean) ? 'direta (rede local)' : null;
+  }
+  const dt = prev.t ? (now - prev.t) / 1000 : 0;
+  const rate = (a, b) => (dt > 0 && typeof a === 'number' && typeof b === 'number' && a >= b) ? ((a - b) * 8 / 1000 / dt) : null; // kbps
+  m.aIn = rate(cur.aIn, prev.aIn); m.vIn = rate(cur.vIn, prev.vIn);
+  m.aOut = rate(cur.aOut, prev.aOut); m.vOut = rate(cur.vOut, prev.vOut);
+  if (dt > 0 && typeof cur.aLost === 'number' && typeof prev.aLost === 'number') {
+    const dL = Math.max(0, cur.aLost - prev.aLost), dR = Math.max(0, cur.aRecv - prev.aRecv);
+    if (dL + dR > 0) m.loss = dL / (dL + dR) * 100;
+  }
+  statsPrev[pid] = cur;
+  return m;
+}
+
+function levelOf(m) {
+  if (!m) return 'good';
+  if (m.state === 'failed' || m.state === 'closed') return 'bad';
+  if ((m.loss != null && m.loss >= 15) || (m.rtt != null && m.rtt >= 800)) return 'bad';
+  if (m.state === 'disconnected' || (m.loss != null && m.loss >= 5) || (m.rtt != null && m.rtt >= 300) || (m.jitter != null && m.jitter >= 50)) return 'warn';
+  return 'good';
+}
+
+function updateHealth(out) {
+  Object.keys(peerHealth).forEach((pid) => { if (!out[pid]) { delete peerHealth[pid]; renderBadges(pid); } });
+  Object.keys(out).forEach((pid) => {
+    const level = levelOf(out[pid]);
+    const was = peerHealth[pid] && peerHealth[pid].level;
+    peerHealth[pid] = { level, m: out[pid] };
+    if (level !== was) {
+      renderBadges(pid);
+      if (level !== 'good' && Date.now() - (lastWarn[pid] || 0) > 30000) { lastWarn[pid] = Date.now(); notify('⚠️ Conexão ' + (level === 'bad' ? 'ruim' : 'instável') + ' com ' + nameOf(pid), true); }
+    }
+  });
+  updateNetBadge();
+}
+
+function updateNetBadge() {
+  const b = $('netBadge');
+  const hs = Object.keys(peerHealth).map((k) => peerHealth[k]);
+  if (!hs.length) { b.style.display = 'none'; return; }
+  const worst = hs.some((h) => h.level === 'bad') ? 'bad' : hs.some((h) => h.level === 'warn') ? 'warn' : 'good';
+  const rtts = hs.map((h) => h.m && h.m.rtt).filter((v) => typeof v === 'number');
+  b.style.display = 'inline-block';
+  b.className = worst;
+  b.textContent = '📶 ' + (worst === 'good' ? 'Boa' : worst === 'warn' ? 'Instável' : 'Ruim') + (rtts.length ? ' · ' + Math.round(Math.max(...rtts)) + ' ms' : '');
+}
+$('netBadge').onclick = () => toggleDiag();
+
+async function statsStep() {
+  statsTick++;
+  if (!diagOpen && statsTick % 2) return;   // painel fechado: só a cada 4 s (basta para os alertas)
+  if (statsBusy) return;
+  statsBusy = true;
+  try {
+    const ids = Object.keys(calls);
+    const res = await Promise.all(ids.map(collectStats));
+    const out = {};
+    ids.forEach((id, i) => { if (res[i]) out[id] = res[i]; });
+    updateHealth(out);
+    if (diagOpen) renderDiag(out);
+  } finally { statsBusy = false; }
+}
+
+function toggleDiag(force) {
+  diagOpen = typeof force === 'boolean' ? force : !diagOpen;
+  $('diagPanel').classList.toggle('show', diagOpen);
+  $('openDiagBtn').textContent = diagOpen ? 'Fechar' : 'Abrir';
+  if (diagOpen) { startStatsLoop(); statsStep(); renderDiag({}); }
+}
+$('diagClose').onclick = () => toggleDiag(false);
+$('openDiagBtn').onclick = () => { toggleDiag(); if (diagOpen) closeSettings(); };
+
+function renderDiag(out) {
+  const body = $('diagBody');
+  body.textContent = '';
+  const ids = Object.keys(out);
+  if (!ids.length) { const p = document.createElement('div'); p.className = 'dfoot'; p.textContent = 'Ninguém conectado por áudio ainda.'; body.appendChild(p); return; }
+  const tbl = document.createElement('table');
+  const num = (v, d, u) => (typeof v === 'number' && isFinite(v)) ? v.toFixed(d) + u : '—';
+  ids.forEach((pid) => {
+    const m = out[pid], lvl = levelOf(m);
+    const head = tbl.insertRow(); head.className = 'peerhead';
+    const c = head.insertCell(); c.colSpan = 2;
+    c.textContent = nameOf(pid) + ' — ' + m.state + (m.route ? ' · ' + m.route : '');
+    const row = (label, value, cls) => { const r = tbl.insertRow(); const th = document.createElement('th'); th.textContent = label; r.appendChild(th); const td = r.insertCell(); td.textContent = value; if (cls) td.className = cls; };
+    row('Latência (ida e volta)', num(m.rtt, 0, ' ms'), m.rtt >= 800 ? 'bd' : m.rtt >= 300 ? 'wn' : 'ok');
+    row('Jitter (áudio)', num(m.jitter, 1, ' ms'), m.jitter >= 50 ? 'wn' : 'ok');
+    row('Perda de pacotes (áudio)', num(m.loss, 1, ' %'), m.loss >= 15 ? 'bd' : m.loss >= 5 ? 'wn' : 'ok');
+    row('Áudio recebido', num(m.aIn, 0, ' kbps'));
+    const st = peerStates[pid] || {};
+    if (st.screen) {
+      row('Tela recebida', num(m.vIn, 0, ' kbps'));
+      row('Resolução / FPS recebidos', (m.w && m.h ? m.w + '×' + m.h : '—') + ' @ ' + (typeof m.fps === 'number' ? Math.round(m.fps) + ' fps' : '—'));
+    }
+    row('Você envia: áudio', num(m.aOut, 0, ' kbps'));
+    if (sharingScreen) row('Você envia: tela', num(m.vOut, 0, ' kbps') + (m.limit && m.limit !== 'none' ? ' · limitado por ' + ({ bandwidth: 'banda', cpu: 'processador' }[m.limit] || m.limit) : ''), m.limit === 'bandwidth' || m.limit === 'cpu' ? 'wn' : '');
+    if (lvl !== 'good') row('Alerta', lvl === 'bad' ? 'Conexão ruim: podem ocorrer cortes' : 'Conexão instável', lvl === 'bad' ? 'bd' : 'wn');
+  });
+  body.appendChild(tbl);
+}
+
+// ================= v10: painel de configurações =================
+function openSettings() {
+  document.body.classList.add('settings-open');
+  initSettingsValues();
+  refreshDevices(); refreshMicInfo(); refreshNoiseHint(); updateScreenInfo();
+  settingsMeterLoop();
+}
+function closeSettings() {
+  document.body.classList.remove('settings-open');
+  cancelAnimationFrame(settingsRaf);
+  if (monitorOn) toggleMonitor(false);
+}
+let settingsRaf = 0;
+function settingsMeterLoop() {
+  if (!document.body.classList.contains('settings-open')) return;
+  const fill = $('micMeterFill'), gateMark = $('micMeterGate');
+  let db = -70, peak = 0;
+  if (micTapAnalyser && hasMic) {
+    const buf = new Float32Array(micTapAnalyser.fftSize);
+    micTapAnalyser.getFloatTimeDomainData(buf);
+    let s = 0;
+    for (let i = 0; i < buf.length; i++) { s += buf[i] * buf[i]; const a = Math.abs(buf[i]); if (a > peak) peak = a; }
+    db = Math.max(-70, 10 * Math.log10(s / buf.length + 1e-12));
+  }
+  fill.style.width = Math.max(0, Math.min(100, (db + 70) / 70 * 100)) + '%';
+  fill.style.background = peak > 0.98 ? '#ff6b6b' : (prefs.gateOn && db < Number(prefs.gateThr)) ? '#6b7280' : '#5fd38d';
+  gateMark.style.display = prefs.gateOn ? 'block' : 'none';
+  gateMark.style.left = ((Number(prefs.gateThr) + 70) / 70 * 100) + '%';
+  settingsRaf = requestAnimationFrame(settingsMeterLoop);
+}
+
+function refreshMicInfo() {
+  const el = $('micInfo');
+  if (!el) return;
+  if (!hasMic || !micTrack) { el.textContent = 'Microfone não ativado.'; return; }
+  const s = micTrack.getSettings ? micTrack.getSettings() : {};
+  const yn = (v) => v === undefined ? '?' : (v ? 'sim' : 'não');
+  el.textContent = 'Em uso — eco: ' + yn(s.echoCancellation) + ' · ruído do navegador: ' + yn(s.noiseSuppression) + ' · AGC: ' + yn(s.autoGainControl) +
+    ' · filtro IA: ' + (rnnoiseNode ? 'ativo' : 'inativo') + (s.sampleRate ? ' · ' + s.sampleRate + ' Hz' : '') + (s.channelCount ? ' · ' + s.channelCount + ' canal' : '');
+}
+function refreshNoiseHint() {
+  const el = $('noiseHint');
+  if (!el) return;
+  let t = '';
+  if (prefs.noise === 'ai') {
+    if (!workletSupported()) t = 'Este navegador não suporta o filtro de IA; usando o do navegador.';
+    else if (audioCtx && audioCtx.sampleRate !== 48000) t = 'Este aparelho não abriu o áudio em 48 kHz; usando o filtro do navegador.';
+    else if (rnnoiseFailed && !rnnoiseAssets) t = 'Não consegui baixar o filtro de IA (internet ou bloqueio). Usando o do navegador por enquanto.';
+    else if (!rnnoiseAssets) t = 'Baixando o filtro de IA (~220 KB)...';
+    else t = 'Roda no seu aparelho (WebAssembly), nada é enviado a terceiros; adiciona cerca de 10 ms de atraso.';
+  } else if (prefs.noise === 'browser') t = 'Filtro do navegador: leve, mas deixa passar mais teclado e ventilador.';
+  else t = 'Sem filtro: a voz vai como o microfone captou.';
+  el.textContent = t;
+}
+
+function initSettingsValues() {
+  $('setName').value = myName === 'Anônimo' ? '' : myName;
+  $('setGain').value = micVolumePercent; $('setGainVal').textContent = micVolumePercent + '%';
+  $('setNoise').value = prefs.noise;
+  $('setEcho').checked = !!prefs.echo; $('setAgc').checked = !!prefs.agc;
+  $('setGate').checked = !!prefs.gateOn; $('setGateThr').value = prefs.gateThr; $('setGateVal').textContent = prefs.gateThr + ' dB';
+  $('gateRow').style.display = prefs.gateOn ? '' : 'none';
+  $('setRes').value = String(prefs.res); $('setFps').value = String(prefs.fps);
+  $('setScreenMode').value = prefs.screenMode; $('setScreenAudio').checked = !!prefs.screenAudio;
+  $('setNotices').checked = !!prefs.notices;
+  $('setMonitorSrc').value = monitorSrc;
+  const aiOpt = [...$('setNoise').options].find((o) => o.value === 'ai');
+  if (aiOpt) aiOpt.disabled = !workletSupported();
+  refreshShortcutLabels();
+}
+
+$('settingsBtn').onclick = openSettings;
+$('settingsClose').onclick = closeSettings;
+$('settingsOverlay').onclick = closeSettings;
+
+$('setName').onchange = (e) => {
+  myName = cleanName(e.target.value) || 'Anônimo';
+  prefs.name = myName === 'Anônimo' ? '' : myName; savePrefs();
+  const tile = $('tile-local');
+  if (tile) { tile.querySelector('.tag').textContent = myName + ' (você)'; tile.querySelector('.avatar').textContent = initials(myName); }
+  sendMyName();
+  if (isHost && peer) broadcastRoster();
+};
+$('setMicDevice').onchange = (e) => { prefs.micDevice = e.target.value; savePrefs(); applyMicSettings(); };
+$('setOutDevice').onchange = (e) => { prefs.outDevice = e.target.value; savePrefs(); applySinkAll(); };
+$('setGain').oninput = (e) => setMicVolume(Number(e.target.value), 'panel');
+$('setNoise').onchange = async (e) => {
+  prefs.noise = e.target.value; savePrefs();
+  if (prefs.noise === 'ai' && workletSupported()) { refreshNoiseHint(); await prepareNoise(10000); }
+  refreshNoiseHint();
+  applyMicSettings();
+};
+$('setEcho').onchange = (e) => { prefs.echo = e.target.checked; savePrefs(); applyMicSettings(); };
+$('setAgc').onchange = (e) => { prefs.agc = e.target.checked; savePrefs(); applyMicSettings(); };
+$('setGate').onchange = (e) => { prefs.gateOn = e.target.checked; savePrefs(); $('gateRow').style.display = prefs.gateOn ? '' : 'none'; sendGate(); };
+$('setGateThr').oninput = (e) => { prefs.gateThr = Number(e.target.value); $('setGateVal').textContent = prefs.gateThr + ' dB'; sendGate(); };
+$('setGateThr').onchange = () => savePrefs();
+$('setRes').onchange = (e) => { prefs.res = Number(e.target.value); savePrefs(); applyScreenSettingsLive(); };
+$('setFps').onchange = (e) => { prefs.fps = Number(e.target.value); savePrefs(); applyScreenSettingsLive(); };
+$('setScreenMode').onchange = (e) => { prefs.screenMode = e.target.value; savePrefs(); applyScreenSettingsLive(); };
+$('setScreenAudio').onchange = (e) => { prefs.screenAudio = e.target.checked; savePrefs(); if (sharingScreen) toast('O áudio da tela vale na próxima vez que você compartilhar.'); };
+$('setNotices').onchange = (e) => { prefs.notices = e.target.checked; savePrefs(); };
+$('monitorBtn').onclick = () => toggleMonitor();
+$('setMonitorSrc').onchange = (e) => { monitorSrc = e.target.value; if (monitorOn) connectMonitor(); };
+$('setShortcutBtn').onclick = () => {
+  const btn = $('setShortcutBtn');
+  capturingShortcut = true; btn.textContent = 'Pressione a tecla…';
+  const MODS = ['ControlLeft', 'ControlRight', 'ShiftLeft', 'ShiftRight', 'AltLeft', 'AltRight', 'MetaLeft', 'MetaRight'];
+  const handler = (e) => {
+    if (MODS.includes(e.code)) return;
+    e.preventDefault(); e.stopPropagation();
+    document.removeEventListener('keydown', handler, true);
+    capturingShortcut = false;
+    if (e.code !== 'Escape') { prefs.shortcut = shortcutFromEvent(e); savePrefs(); }
+    refreshShortcutLabels();
+  };
+  document.addEventListener('keydown', handler, true);
+};
+$('layoutBtn').title = 'Alternar layout: grade / foco / lateral (duplo clique em um tile fixa o destaque)';
+
+// Estado inicial da tela de entrada: nome salvo e pré-carregamento do filtro de IA (não atrapalha a abertura da página)
+if (prefs.name) $('nameInput').value = prefs.name;
+if (prefs.noise === 'ai' && workletSupported()) {
+  const warm = () => loadRnnoiseAssets().catch(() => {});
+  if (window.requestIdleCallback) requestIdleCallback(warm, { timeout: 3000 }); else setTimeout(warm, 1500);
+}
+document.addEventListener('visibilitychange', () => { if (!document.hidden) resumeAudio(); });
 
 // ---- Tela cheia + girar (celular) ----
 let theater = null; // { tile, rot, fs }
