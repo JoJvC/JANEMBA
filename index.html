@@ -216,7 +216,7 @@
     max-width: 90vw;
     text-align: center;
   }
-  /* ---- Celular / tela cheiaA ---- */
+  /* ---- Celular / tela cheia ---- */
   #joinScreen, #callScreen { min-height: 100dvh; }
   #topbar { flex-wrap: wrap; gap: 8px; }
   #toast { z-index: 2000; }
@@ -282,7 +282,9 @@
   .sset h3 { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: #9aa0a6; margin-bottom: 10px; }
   .srow { display: flex; flex-direction: column; gap: 5px; margin-bottom: 11px; }
   .srow > label, .srow .lbl { font-size: 13px; color: #c9ccd1; }
-  .srow .hint { font-size: 11px; color: #7b818a; line-height: 1.35; }
+  .srow .hint, .sset > .hint { font-size: 11px; color: #7b818a; line-height: 1.35; margin-bottom: 8px; }
+  #grid.layout-focus .tile:not(.focus) .tag, #grid.layout-side .tile:not(.focus) .tag { max-width: calc(100% - 16px); left: 8px; bottom: 8px; padding: 2px 6px; font-size: 11px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  #grid.layout-focus .tile:not(.focus) .avatar, #grid.layout-side .tile:not(.focus) .avatar { margin-bottom: 14px; }
   .srow select, .srow input[type="text"] { width: 100%; padding: 9px 10px; border-radius: 9px; border: 1px solid #2a2e37; background: #0f1115; color: #eaeaea; font-size: 14px; }
   .srow input[type="range"] { width: 100%; accent-color: #5b8cff; }
   .srow.inline { flex-direction: row; align-items: center; justify-content: space-between; gap: 10px; }
@@ -1671,8 +1673,9 @@ function checkNoSignal() {
   rawAnalyser.getFloatTimeDomainData(buf);
   let peak = 0;
   for (let i = 0; i < buf.length; i++) { const a = Math.abs(buf[i]); if (a > peak) peak = a; }
-  noSignalCount = peak === 0 ? noSignalCount + 1 : 0;
-  const next = noSignalCount >= 5 ? 'nosignal' : (micState === 'nosignal' ? 'ok' : micState);
+  // só conta silêncio digital (< -100 dBFS) por 12 s seguidos: microfone real, mesmo em sala quieta, sempre tem algum ruído
+  noSignalCount = peak < 1e-5 ? noSignalCount + 1 : 0;
+  const next = noSignalCount >= 12 ? 'nosignal' : (micState === 'nosignal' ? 'ok' : micState);
   if (next !== micState) { micState = next; updateMicAlert(); }
 }
 setInterval(checkNoSignal, 1000);
@@ -1684,7 +1687,7 @@ function updateMicAlert() {
   if (hasMic) {
     if (micState === 'lost') { msg = '🎙️ O microfone foi desconectado ou parou de responder.'; label = 'Tentar de novo'; fn = () => applyMicSettings(); }
     else if (micTrack && micTrack.muted) { msg = '🎙️ O sistema/aparelho está com o microfone mudo ou bloqueado.'; }
-    else if (micState === 'nosignal' && micOn) { msg = '🎙️ Sem sinal do microfone: nenhum som está chegando. Confira o mudo do aparelho ou troque o dispositivo.'; label = 'Configurações'; fn = openSettings; }
+    else if (micState === 'nosignal' && micOn) { msg = '🎙️ O microfone está entregando silêncio total há alguns segundos. Se você estava falando, confira o mudo do aparelho ou troque o dispositivo.'; label = 'Configurações'; fn = openSettings; }
   }
   box.classList.toggle('show', !!msg);
   $('micAlertText').textContent = msg;
