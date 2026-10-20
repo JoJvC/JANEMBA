@@ -466,6 +466,7 @@
   </div>
 </aside>
 
+<script src="config.js"></script>
 <script>
 const $ = (id) => document.getElementById(id);
 
@@ -533,15 +534,49 @@ if (urlParams.get('room')) $('roomInput').value = urlParams.get('room');
 
 $('joinBtn').onclick = joinCall;
 
-const RTC_CONFIG = {
-  iceServers: [
-    { urls: 'stun:stun.l.google.com:19302' },
-    { urls: 'stun:stun1.l.google.com:19302' },
-    { urls: 'stun:global.stun.twilio.com:3478' },
-    // TURN: ajuda MUITO quem está no 4G/5G ou em rede restrita. Preencha com os dados do seu provedor:
-    // { urls: 'turn:SEU-SERVIDOR:443?transport=tcp', username: 'USUARIO', credential: 'SENHA' },
-  ]
-};
+const STUN_SERVERS = [
+  { urls: 'stun:stun.l.google.com:19302' },
+  { urls: 'stun:stun1.l.google.com:19302' },
+  { urls: 'stun:global.stun.twilio.com:3478' },
+];
+// O objeto é o mesmo durante toda a sessão; loadIceServers() só troca a lista de servidores dentro dele.
+const RTC_CONFIG = { iceServers: STUN_SERVERS.slice() };
+
+// TURN: sem ele, quem está atrás de NAT simétrico, CGNAT, 4G/5G ou roteador com duas operadoras
+// (balanceamento de carga) fica preso em "conectando". Configure em config.js:
+//   CALLZINHA_ICE_SERVERS   -> lista fixa de servidores (ex.: TURN próprio com usuário/senha)
+//   CALLZINHA_TURN_URL      -> endereço que devolve credenciais temporárias (Worker da Cloudflare em turn-worker/, ou API do Metered)
+const ICE_STATIC = Array.isArray(window.CALLZINHA_ICE_SERVERS) ? window.CALLZINHA_ICE_SERVERS : [];
+const TURN_URL = window.CALLZINHA_TURN_URL || '';
+let turnLoadedAt = 0;
+
+// Navegadores bloqueiam a porta 53; sem filtrar, a coleta de candidatos espera o timeout dela.
+function dropPort53(servers) {
+  return servers.map(s => {
+    const urls = [].concat(s.urls || []).filter(u => !/:53(\?|$)/.test(u));
+    return Object.assign({}, s, { urls });
+  }).filter(s => s.urls.length);
+}
+
+async function loadIceServers() {
+  let dynamic = [];
+  if (TURN_URL && Date.now() - turnLoadedAt > 6 * 3600 * 1000) {
+    try {
+      const ctrl = new AbortController();
+      const t = setTimeout(() => ctrl.abort(), 5000);
+      const r = await fetch(TURN_URL, { signal: ctrl.signal, cache: 'no-store' });
+      clearTimeout(t);
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const data = await r.json();
+      // Cloudflare/Worker: { iceServers: [...] }  •  Metered: [...]
+      dynamic = dropPort53(Array.isArray(data) ? data : (data.iceServers || []));
+      turnLoadedAt = Date.now();
+    } catch (e) {
+      console.warn('TURN indisponível, seguindo só com STUN:', e);
+    }
+  }
+  if (dynamic.length || !turnLoadedAt) RTC_CONFIG.iceServers = STUN_SERVERS.concat(ICE_STATIC, dynamic);
+}
 const MAX_TRIES = 10;
 let joining = false;
 let retryTimer = null;
@@ -579,6 +614,9 @@ async function joinCall() {
     localStream = new MediaStream();
     hasMic = false;
   }
+
+  setStatus("Preparando a conexão...");
+  await loadIceServers();
 
   setStatus("Conectando na sala...");
   startPeer(0);

@@ -1,0 +1,7 @@
+name = "janemba-turn"
+main = "worker.js"
+compatibility_date = "2026-10-01"
+
+[vars]
+# Sites que podem pedir credenciais (separados por vírgula)
+ALLOWED_ORIGINS = "https://erosxv.github.io"
