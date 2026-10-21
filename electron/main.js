@@ -78,6 +78,17 @@ app.whenReady().then(() => {
     pickScreen(request, callback).catch(() => callback({}));
   });
 
+  // O player do YouTube recusa tocar (erro 153) sem saber de qual site veio: dizemos que é o site público
+  ses.webRequest.onBeforeSendHeaders(
+    { urls: ['*://*.youtube.com/*', '*://*.youtube-nocookie.com/*'] },
+    (details, cb) => {
+      if (!details.requestHeaders.Referer || details.requestHeaders.Referer.startsWith('app:')) {
+        details.requestHeaders.Referer = 'https://erosxv.github.io/';
+      }
+      cb({ requestHeaders: details.requestHeaders });
+    }
+  );
+
   createWindow();
   app.on('activate', () => { if (!BrowserWindow.getAllWindows().length) createWindow(); });
 });
