@@ -801,8 +801,13 @@ async function enableMic() {
   }
 }
 
+// No app (Electron/Android/iOS) o endereço é interno, então o convite aponta pro site público
+const PUBLIC_URL = 'https://erosxv.github.io/JANEMBA/';
+const IN_APP = !/^https?:$/.test(location.protocol) || location.hostname === 'localhost' || !!window.Capacitor;
+
 $('copyLinkBtn').onclick = () => {
-  const link = location.origin + location.pathname + "?room=" + encodeURIComponent(roomId);
+  const base = IN_APP ? PUBLIC_URL : location.origin + location.pathname;
+  const link = base + "?room=" + encodeURIComponent(roomId);
   navigator.clipboard.writeText(link).then(() => toast("Link copiado! Manda pra galera 🎉"));
 };
 
@@ -2471,8 +2476,8 @@ setInterval(() => { if (isHost && music.playing) broadcastMusic(); }, 5000);
 
 window.onbeforeunload = () => { if (peer) peer.destroy(); };
 window.addEventListener('pagehide', () => { if (peer) peer.destroy(); }); // celular: libera o ID da sala mais rápido
-// PWA: registra o service worker (só em https ou localhost) para o app poder ser instalado
-if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
+// PWA: registra o service worker (só em https ou localhost) para o app poder ser instalado. Dentro do app nativo não precisa.
+if ('serviceWorker' in navigator && !window.Capacitor && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
   window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); });
 }
 </script>

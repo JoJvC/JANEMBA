@@ -1,0 +1,59 @@
+# Gera os apps do CallZinha (Windows, Linux e Android) nos servidores do GitHub.
+# Roda quando você manda uma tag tipo v1.2.0, ou na mão em Actions → "Gerar apps" → Run workflow.
+# Os arquivos ficam em Actions → a execução → Artifacts (e numa Release, se veio de uma tag).
+name: Gerar apps
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  desktop:
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            script: dist:win
+            files: dist/*.exe
+          - os: ubuntu-latest
+            script: dist:linux
+            files: |
+              dist/*.AppImage
+              dist/*.deb
+              dist/*.tar.gz
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - run: npm run ${{ matrix.script }} -- --publish never
+      - uses: actions/upload-artifact@v4
+        with:
+          name: callzinha-${{ matrix.os }}
+          path: ${{ matrix.files }}
+      - if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with: { files: '${{ matrix.files }}' }
+
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: 21 }
+      - run: npm ci
+      - run: npm run build:web && npx cap sync android
+      - run: chmod +x android/gradlew && cd android && ./gradlew assembleDebug
+      - run: mv android/app/build/outputs/apk/debug/app-debug.apk CallZinha.apk
+      - uses: actions/upload-artifact@v4
+        with: { name: callzinha-android, path: CallZinha.apk }
+      - if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with: { files: CallZinha.apk }
